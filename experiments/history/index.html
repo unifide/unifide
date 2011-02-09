@@ -12,10 +12,10 @@
 	    var state = 0;
 	    // different page messages depending on state
 	    var msg = [
-		["root","You are at root"],
-		["lvl1","You are at level 1"],
-		["lvl2","You are at level 2"],
-		["end","You are at the end"]
+		{id:"root",label:"You are at root"],
+		{id:"lvl1",label:"You are at level 1"],
+		{id:"lvl2",label:"You are at level 2"],
+		{id:"end",label:"You are at the end"]
 	    ];
 	    
 	    // At init, this happes
@@ -39,24 +39,33 @@
 		});
 	    })
 
+	    // This is where the address is changed
+	    //
 	    // Once the state has been changed,
 	    // push it to the browser's history state stack and change the URL
 	    function pushState() {
 		console.log("PUSH");
 		console.log(state);
+		// the following line just means it goes back to 
+		// /history instead of /history/root for the bottom level
 		var url = (state==0?"":msg[state][0]);
+		// do the actual change
 		window.history.pushState(
-		    {msg:msg[state][1],state:state},
-		    msg[state][0],
-		    path+url);
+		    {state:state}, // variables to send
+		    '', // some sort of name thing, not required
+		    path+url); // URL to change to
 		updatePage();
 	    }
 
 	    // when we hit back or forward, this happens
+	    // here we get the old status and set the page accordingly
 	    window.onpopstate = function(e) {
 		console.log("POP");
 		if(e.state) {
-		    state = e.state.state
+		    // e is a history stack event
+		    // e.state is the object we passed previously
+		    // e.state["state"] is the state variable we pushed
+		    state = e.state["state"];
 		}
 		console.log(state);
 		updatePage();
