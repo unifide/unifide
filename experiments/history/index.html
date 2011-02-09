@@ -12,10 +12,10 @@
 	    var state = 0;
 	    // different page messages depending on state
 	    var msg = [
-		{id:"root",label:"You are at root"],
-		{id:"lvl1",label:"You are at level 1"],
-		{id:"lvl2",label:"You are at level 2"],
-		{id:"end",label:"You are at the end"]
+		{id:"root",label:"You are at root"},
+		{id:"lvl1",label:"You are at level 1"},
+		{id:"lvl2",label:"You are at level 2"},
+		{id:"end",label:"You are at the end"}
 	    ];
 	    
 	    // At init, this happes
@@ -48,7 +48,7 @@
 		console.log(state);
 		// the following line just means it goes back to 
 		// /history instead of /history/root for the bottom level
-		var url = (state==0?"":msg[state][0]);
+		var url = (state==0?"":msg[state].id);
 		// do the actual change
 		window.history.pushState(
 		    {state:state}, // variables to send
@@ -74,7 +74,7 @@
 	    // Once state has been updated, update the page
 	    function updatePage() {
 		// Update label
-		$("#loc").text(msg[state][1]);
+		$("#loc").text(msg[state].label);
 
 		// Make sure to disable buttons appropriately
 		if(state == 0) {
