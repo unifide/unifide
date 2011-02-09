@@ -1,0 +1,6 @@
+# Sinatra
+gem 'sinatra'
+
+# Datamapper
+gem 'dm-core'
+gem 'dm-postgres-adapter'
