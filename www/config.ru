@@ -1,3 +1,3 @@
-require 'magnifide.rb'
+require "magnifide.rb"
 
 run Magnifide.new

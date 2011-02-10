@@ -1,5 +1,6 @@
 require 'rubygems'
 require 'sinatra'
+require 'model/model.rb'
 
 class Magnifide < Sinatra::Base
     post '/json' do
