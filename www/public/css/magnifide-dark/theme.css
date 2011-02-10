@@ -2,8 +2,11 @@
 
 body {
     background-color:#666;
-    color:#FFE;
+    color:#EEE;
 }
 .orange {
     color:#FC0;
+}
+a {
+    color:#FED;
 }

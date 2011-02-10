@@ -3,6 +3,12 @@ body {
     font-family:sans;
     font-size:62.5%
 }
+a {
+    text-decoration:none;
+}
+a:hover {
+    text-decoration:underline;
+}
 
 .welcome {
     font-size:150%;
