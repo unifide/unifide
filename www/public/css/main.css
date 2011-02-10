@@ -1,19 +1,9 @@
 body {
     margin:0px;
-    background-color:#666;
-    color:#FFE;
     font-family:sans;
     font-size:62.5%
 }
 
-#content {
-    text-shadow:1px 1px 1px black;
+.welcome {
     font-size:150%;
-}
-
-.name {
-    font-weight:bold;
-}
-.name-end {
-    color:#FC0;
 }

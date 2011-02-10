@@ -1,0 +1,9 @@
+@import url("jquery-ui.css");
+
+body {
+    background-color:#666;
+    color:#FFE;
+}
+.orange {
+    color:#FC0;
+}
