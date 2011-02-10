@@ -1,3 +1,3 @@
 $(window).load(function() {
-    alert("LOADED!");
+    $("button").button();
 });

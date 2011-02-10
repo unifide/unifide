@@ -3,10 +3,12 @@ body {
     background-color:#666;
     color:#FFE;
     font-family:sans;
+    font-size:62.5%
 }
 
 #content {
     text-shadow:1px 1px 1px black;
+    font-size:150%;
 }
 
 .name {
