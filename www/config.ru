@@ -1,3 +1,3 @@
-require 'app.rb'
+require 'magnifide.rb'
 
-run Sinatra::Application
+run Magnifide.new
