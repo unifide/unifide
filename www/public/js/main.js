@@ -1,3 +1,5 @@
 $(window).load(function() {
-    $("button").button();
+    $("button").button().click(function (){
+	$.post("/json",function(json) {alert(json.a)});
+    });
 });
