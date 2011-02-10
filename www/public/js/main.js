@@ -1,16 +1,22 @@
-var theme = 0;
-
 $(window).load(function() {
-    $("button").button().click(toggleTheme);
+    new Magnifide();
 });
 
-function toggleTheme() {
-    if(theme == "light") theme = "dark";
-    else theme = "light";
-    $("link.theme").each(function() {
-        if($(this).attr("title") == theme)
-            $(this).removeAttr("disabled");
-        else
-            $(this).attr("disabled","disabled");
-    });
-}
+var Magnifide = Class.extend({
+init: function() {
+    this.theme = 0;
+    $("button").button().click(this.toggleTheme);
+},
+
+toggleTheme: function() {
+        if(this.theme == "light") this.theme = "dark";
+        else this.theme = "light";
+        var theme = this.theme;
+        $("link.theme").each(function() {
+            if($(this).attr("title") == theme)
+                $(this).removeAttr("disabled");
+            else
+                $(this).attr("disabled","disabled");
+        });
+    }
+});
