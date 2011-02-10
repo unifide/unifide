@@ -1,0 +1,17 @@
+body {
+    margin:0px;
+    background-color:#666;
+    color:#FFE;
+    font-family:sans;
+}
+
+#content {
+    text-shadow:1px 1px 1px black;
+}
+
+.name {
+    font-weight:bold;
+}
+.name-end {
+    color:#FC0;
+}
