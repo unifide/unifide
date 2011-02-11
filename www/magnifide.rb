@@ -10,8 +10,17 @@ class Magnifide < Sinatra::Base
         '{"a":1,"b":"two"}'
     end
 
-    get '/*' do
+    get '/' do
         erb :index
     end
+
+	get '/class/:name' do |n|
+		@klass = Klass.first(:name => n)
+		if @klass
+			erb :klass
+		else
+			erb :index
+		end
+	end
 end
 

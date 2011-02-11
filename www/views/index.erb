@@ -10,9 +10,11 @@
 	
 	<%if Klass.all.empty?%>
 	<p>No Classes!</p>
-	<%end%>
-	
-	<%Klass.all.each do |klass|%>
-	<p><%=klass.name%>
+	<%else%>
+	<ul>
+		<%Klass.all.each do |klass|%>
+		<li><a href="class/<%=klass.name%>"><%=klass.name%></a></li>
+		<%end%>
+	</ul>
 	<%end%>
 </div>
