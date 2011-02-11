@@ -1,6 +1,3 @@
-$.widget("ui.Editor",{
-options: {
-},
-_create: function() {
-}
+var Editor = Class.extend({
+init:function() {}
 });

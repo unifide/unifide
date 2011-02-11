@@ -1,0 +1,36 @@
+Magnifide (main controller)
+    project : Project
+    editors : Editor[]
+    theme : Theme
+    user : User
+
+Project (main model)
+    assets : Asset[] {1}
+
+// A single element in the project, e.g. a class or table
+Asset
+
+PackageAsset : Asset
+ClassAsset : Asset
+MethodAsset : Asset
+TableAsset : Asset
+
+// One editing panel, one window can have many of these
+Editor (main view)
+    contexts : Context[] {2}
+
+// An editor can have a single active context at a time
+Context (sub controller) {3}
+    widget : ContextWidget {4}
+
+ProjectContext : Context
+PackageContext : Context
+ClassContext : Context
+FileContext : Context
+DatabaseContext : Context
+TableContext : Context
+
+{1} Will probably need to be a more complex structure than just an array.
+{2} Even though an editor can have multiple contexts, only one is active at a time.
+{3} Context is a superclass and is never actually used, classes such as FileContext, ClassContext, TableContext, etc. inherit from Context.
+{4} ContextWidget isn't actually a class, but can be any widget that meets the required specs.
