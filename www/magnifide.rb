@@ -1,6 +1,7 @@
+$LOAD_PATH << './model'
 require 'rubygems'
 require 'sinatra'
-require 'model/model.rb'
+require 'model'
 
 class Magnifide < Sinatra::Base
     post '/json' do
