@@ -5,3 +5,14 @@
     <button>Toggle theme</button>
     <a href="#">This is a link</a>
 </div>
+<div>
+	<span>All Classes:</span>
+	
+	<%if Klass.all.empty?%>
+	<p>No Classes!</p>
+	<%end%>
+	
+	<%Klass.all.each do |klass|%>
+	<p><%=klass.name%>
+	<%end%>
+</div>
