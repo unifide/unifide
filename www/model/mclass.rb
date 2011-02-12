@@ -6,7 +6,7 @@ class MClass
 	property :creation_time,	DateTime, :required => true, :default => DateTime.now
 	property :visibility_id, Integer, :required => true
 
-	has n, :mattributes, 'MAttribute'
+	has n, :mattributes, 'MAttribute', :child_key => [:owner_id]
 
 	has n, :generalizations, 'Generalization', :child_key => [ :parent_id ]
 	has n, :child_mclasses, self, :through => :generalizations, :via => :child
