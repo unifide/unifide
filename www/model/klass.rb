@@ -2,7 +2,7 @@ class Klass
 	include DataMapper::Resource
 
 	property :id,	Serial
-	property :name,	String, :required => true
+	property :name,	String, :required => true, :unique => true
 	property :creation_time,	DateTime, :required => true, :default => DateTime.now
 	property :visibility_id, Integer, :required => true
 

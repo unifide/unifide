@@ -22,5 +22,17 @@ class Magnifide < Sinatra::Base
 			erb :index
 		end
 	end
-end
 
+	post '/class' do
+		if params[:name].nil? or params[:visibility].nil?
+			redirect '/'
+		else
+			@klass = Klass.create(:name => params[:name], :visibility_id => params[:visibility])
+			if @klass
+				erb :klass
+			else
+				redirect '/'
+			end
+		end
+	end
+end

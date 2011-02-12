@@ -6,4 +6,5 @@ gem 'sinatra'
 
 # Datamapper
 gem 'dm-core'
+gem 'dm-validations'
 gem 'dm-postgres-adapter'
