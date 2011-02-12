@@ -1,5 +1,5 @@
 <form method="post" action="/attribute" id="attribute-form">
-	<input type="hidden" name="class" value="<%=@mclass.id%>"/>
+	<input type="hidden" name="class" value="<%=@uclass.id%>"/>
 	<select name="visibility">
 	<%Visibility.all.each do |v|%>
 		<option value="<%=v.id%>"><%=v.name%></option>

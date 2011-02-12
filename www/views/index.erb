@@ -1,6 +1,6 @@
 <div style="margin:10px;">
     <span class="welcome">
-        Welcome to <strong>magnif<span class="orange">ide</span></strong>!
+        Welcome to <strong>unif<span class="orange">ide</span></strong>!
     </span><br/>
     <button id="theme-toggle">Toggle theme</button>
     <a href="#">This is a link</a>
@@ -8,16 +8,16 @@
 <div>
 	<span>All Classes:</span>
 	
-	<%if MClass.all.empty?%>
+	<%if UClass.all.empty?%>
 	<p>No Classes!</p>
 	<%else%>
 	<ul>
-		<%MClass.all.each do |mclass|%>
-		<li><a href="class/<%=mclass.name%>"><%=mclass.name%></a></li>
+		<%UClass.all.each do |uclass|%>
+		<li><a href="class/<%=uclass.name%>"><%=uclass.name%></a></li>
 		<%end%>
 	</ul>
 	<%end%>
 </div>
 <div>
-	<%= erb :_mclass_form %>
+	<%= erb :_uclass_form %>
 </div>

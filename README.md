@@ -1,7 +1,6 @@
-#magnifide
+#Unifide
 
-## Development Environment Setup
-
+# Development Environment Setup
 ## Ruby
 
 Once you've got ruby installed run
@@ -20,7 +19,7 @@ It installs the gem files listed in Gemfile.
 
 I've been using PostgreSQL 9. To install on ubuntu follow the instructions [here](http://www.dctrwatson.com/2010/09/installing-postgresql-9-0-on-ubuntu-10-04/).
 
-There needs to be a database called magnified-db running on the local host and a user called magnifide-www with password Mag12.
+There needs to be a database called unifide-db running on the local host and a user called unifide-www with password Mag12.
 
 You'll need the migrations gem if you don't already have it.
 	gem install dm-migrations

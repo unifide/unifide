@@ -1,3 +1,3 @@
-require "magnifide.rb"
+require "unifide.rb"
 
-run Magnifide.new
+run Unifide.new
