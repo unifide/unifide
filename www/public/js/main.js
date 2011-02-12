@@ -13,7 +13,8 @@ init: function() {
     this.project = new Project();
     this.editors = [];
     this.editors.push(new Editor());
-    $("button").button().click(this.toggleTheme);
+    $("button").button();
+    $("button#theme-toggle").button().click(this.toggleTheme);
 },
 
 toggleTheme: function() {
