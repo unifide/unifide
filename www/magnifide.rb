@@ -15,9 +15,9 @@ class Magnifide < Sinatra::Base
     end
 
 	get '/class/:name' do |n|
-		@klass = Klass.first(:name => n)
-		if @klass
-			erb :klass
+		@mclass = MClass.first(:name => n)
+		if @mclass
+			erb :mclass
 		else
 			erb :index
 		end
@@ -27,9 +27,9 @@ class Magnifide < Sinatra::Base
 		if params[:name].nil? or params[:visibility].nil?
 			redirect '/'
 		else
-			@klass = Klass.create(:name => params[:name], :visibility_id => params[:visibility])
-			if @klass
-				erb :klass
+			@mclass = MClass.create(:name => params[:name], :visibility_id => params[:visibility])
+			if @mclass
+				erb :mclass
 			else
 				redirect '/'
 			end

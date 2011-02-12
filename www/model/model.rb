@@ -1,7 +1,7 @@
 require 'dm-core'
 require 'dm-validations'
-require 'klass.rb'
-require 'atribute.rb'
+require 'mclass.rb'
+require 'mattribute.rb'
 require 'visibility.rb'
 
 DataMapper::Logger.new($stdout, :debug)

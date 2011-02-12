@@ -8,16 +8,16 @@
 <div>
 	<span>All Classes:</span>
 	
-	<%if Klass.all.empty?%>
+	<%if MClass.all.empty?%>
 	<p>No Classes!</p>
 	<%else%>
 	<ul>
-		<%Klass.all.each do |klass|%>
-		<li><a href="class/<%=klass.name%>"><%=klass.name%></a></li>
+		<%MClass.all.each do |mclass|%>
+		<li><a href="class/<%=mclass.name%>"><%=mclass.name%></a></li>
 		<%end%>
 	</ul>
 	<%end%>
 </div>
 <div>
-	<%= erb :_klass_form %>
+	<%= erb :_mclass_form %>
 </div>

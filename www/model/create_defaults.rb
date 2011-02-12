@@ -5,7 +5,7 @@ privit = Visibility.first_or_create(:name => "private")
 defolt = Visibility.first_or_create(:name => "default")
 
 def makeType(name, vis)
-  Klass.first_or_create({:name => name}, {:name => name, :visibility => vis})
+  MClass.first_or_create({:name => name}, {:name => name, :visibility => vis})
 end
 	
 makeType('Integer', publick)
