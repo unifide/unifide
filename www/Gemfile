@@ -4,7 +4,11 @@ source 'http://rubygems.org'
 # Sinatra
 gem 'sinatra'
 
+#Encryption
+gem 'bcrypt-ruby'
+
 # Datamapper
 gem 'dm-core'
 gem 'dm-validations'
 gem 'dm-postgres-adapter'
+gem 'dm-types'

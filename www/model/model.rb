@@ -1,9 +1,14 @@
-require 'dm-core'
-require 'dm-validations'
-require 'uclass.rb'
-require 'uattribute.rb'
-require 'visibility.rb'
+require 'rubygems'
+require 'bcrypt'
+require 'active_record'
+require 'yaml'
+require 'logger'
 
-DataMapper::Logger.new($stdout, :debug)
+require 'user'
+require 'uclass'
+require 'uattribute'
+require 'visibility'
 
-DataMapper.setup(:default, 'postgres://unifide-www:Mag12@localhost/unifide-db')
+dbconfig = YAML::load(File.open('database.yaml'))
+ActiveRecord::Base.establish_connection(dbconfig)
+ActiveRecord::Base.logger = Logger.new(STDERR)

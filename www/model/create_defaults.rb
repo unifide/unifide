@@ -1,11 +1,11 @@
 require 'model'
-publick = Visibility.first_or_create(:name => "public")
-proteckted = Visibility.first_or_create(:name => "protected")
-privit = Visibility.first_or_create(:name => "private")
-defolt = Visibility.first_or_create(:name => "default")
+publick = Visibility.create(:name => "public")
+proteckted = Visibility.create(:name => "protected")
+privit = Visibility.create(:name => "private")
+defolt = Visibility.create(:name => "default")
 
 def makeType(name, vis)
-  UClass.first_or_create({:name => name}, {:name => name, :visibility => vis})
+  UClass.create(:name => name, :visibility => vis)
 end
 	
 makeType('Integer', publick)

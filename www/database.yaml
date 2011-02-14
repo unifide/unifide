@@ -1,0 +1,5 @@
+adapter: postgresql
+database: unifide-db
+username: unifide-www
+password: Mag12
+host: localhost

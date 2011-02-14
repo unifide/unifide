@@ -15,7 +15,7 @@ class Unifide < Sinatra::Base
     end
 
 	get '/class/:name' do |n|
-		@uclass = UClass.first(:name => n)
+		@uclass = UClass.where(:name => n).first
 		if @uclass
 			@mtypes = UClass.all
 			erb :uclass
@@ -42,12 +42,9 @@ class Unifide < Sinatra::Base
 		if params[:name].nil? or params[:type].nil? or params[:visibility].nil? or params[:class].nil? or params[:type].nil?
 			redirect '/'
 		else
-			@uattribute = UAttribute.create(:name => params[:name], :visibility_id => params[:visibility], :owner_id => params[:class], :utype_id => params[:type])
+			@uattribute = UAttribute.create(:name => params[:name], :visibility_id => params[:visibility], :owner_id => params[:class], :type_id => params[:type])
 			if @uattribute
 				redirect "/class/#{@uattribute.owner.name}"
-				#@mtypes = UClass.all
-				#@uclass = @uattribute.owner
-				#erb :uclass
 			else
 				redirect '/'
 			end
