@@ -5,15 +5,15 @@ Magnifide (main controller)
     user : User
 
 Project (main model)
-    assets : Asset[] {1}
+    units : Unit[] {1}
 
 // A single element in the project, e.g. a class or table
-Asset
+Unit
 
-PackageAsset : Asset
-ClassAsset : Asset
-MethodAsset : Asset
-TableAsset : Asset
+UPackage : Unit
+UClass : Unit
+UMethod : Unit
+UTable : Unit
 
 // One editing panel, one window can have many of these
 Editor (main view)
@@ -26,11 +26,34 @@ Context (sub controller) {3}
 ProjectContext : Context
 PackageContext : Context
 ClassContext : Context
-FileContext : Context
+MethodContext : Context
 DatabaseContext : Context
 TableContext : Context
 
 {1} Will probably need to be a more complex structure than just an array.
 {2} Even though an editor can have multiple contexts, only one is active at a time.
-{3} Context is a superclass and is never actually used, classes such as FileContext, ClassContext, TableContext, etc. inherit from Context.
+{3} Context is a superclass and is never actually used, classes such as MethodContext, ClassContext, TableContext, etc. inherit from Context.
 {4} ContextWidget isn't actually a class, but can be any widget that meets the required specs.
+
+
+Editor:
+
+Editor has one root ProjectContext.
+Main ProjectContext has a link to the main PackageContext, clicking this pushes the ProjectContext into a small bar on the left or top (stays here always, all the way to the bottom levels, clicking on it expands a small version of the ProjectContext, with the option to return to the main ProjectContext)
+
+The main PackageContext contains a number of sub-PackageContexts, possibly stored in a quadtree.
+As the user zooms into these packages and a threshold size is passed, their contents start to appear.
+
+A PackageContext can also contain ClassContexts.
+A ClassContext has several display stages, each displaying more than the last as its size increases.
+In order of importance:
+* class name
+* public properties and methods
+* private properties and methods
+* public method definitions
+* private method definitions
+
+Classes nearer the center of the parent context get priority.
+Connected classes do not disappear from view but merge into the borders to form a list of related units.
+
+Clicking on a method header expands it to fill any free space. The next and previous method names are above and below the currently open method and clicking them switches to that method. The very top of the context contains the class name, clicking that goes to the top of the class definition and collapses all methods.

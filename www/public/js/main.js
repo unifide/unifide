@@ -12,7 +12,7 @@ init: function() {
     this.theme = 0;
     this.project = new Project();
     this.editors = [];
-    this.editors.push(new Editor());
+    this.editors.push(new Editor($("#editor")));
     $("button").button();
     $("button#theme-toggle").button().click(this.toggleTheme);
 },
