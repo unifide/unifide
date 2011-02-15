@@ -1,3 +1,0 @@
---- 
-BUNDLE_DISABLE_SHARED_GEMS: "1"
-BUNDLE_PATH: /home/chris/.rvm/gems/ruby-1.8.7-p330
