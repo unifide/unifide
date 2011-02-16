@@ -7,6 +7,7 @@ $(window).load(function() {
     app.run();
 });
 
+
 // Unifide is our application class
 var Unifide = Class.extend({
 init: function() {
@@ -24,6 +25,8 @@ run: function() {
         this.editors[e].draw();
     }
 
+    $(window).resize($.proxy(app.resize,this));
+
     $("button").button();
     $("button#theme-toggle").button().click(this.toggleTheme);
 },
@@ -40,5 +43,13 @@ toggleTheme: function() {
         else
             $(this).attr("disabled","disabled");
     });
+},
+
+resize: function() {
+    this.canvas.resize();
+    for(var e=0;e<this.editors.length;e++) {
+        this.editors[e].resize();
+        this.editors[e].draw();
+    }
 }
 });
