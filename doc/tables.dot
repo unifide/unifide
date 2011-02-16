@@ -19,51 +19,66 @@ digraph g {
 
     User [
         label = "{User|\
-            <name>name\l|\
+            <uid>id\l|\
+            <second_name>first name\l|\
+            <first_name>second name\l|\
             email\l|\
             password\l|\
             joindate\l}"
     ]
     UProject [
         label = "{UProject|\
+            <uid>id\l|\
             name\l|\
             <creator>creator\l|\
             <collaborators>collaborators\l|\
             creation date\l}"
     ]
 
-    UProject:creator -> User:name
+    UProject:creator -> User:uid
 
     UPackage [
         label = "{UPackage|\
+            <uid>id\l|\
             <name>name\l|\
             <parent>parent\l|\
             creation date\l}"
     ]
     UClass [
         label = "{UClass|\
+            <uid>id\l|\
             <name>name\l|\
             <package>package\l|\
             <parent>parent\l|\
+            <vis>visibility\l|\
             creation date\l}"
     ]
     UMethod [
         label = "{UMethod|\
+            <uid>id\l|\
             <name>name\l|\
             <owner>owner\l|\
             creation date\l|\
-            visbility\l}"
+            <vis>visibility\l}"
     ]
     UAttribute [
         label = "{UAttribute|\
+            <uid>id\l|\
             <type>type\l|\
             <owner>owner\l|\
             creation date\l|\
-            visibility\l}"
+            <vis>visibility\l}"
+    ]
+    Visibility [
+        label = "{Visibility|<uid> id\l|name\l}"
     ]
 
-    UPackage:name -> UClass:package
-    UClass:name -> UMethod:owner
-    UClass:name -> UAttribute:type
-    UClass:name -> UAttribute:owner
+    UPackage:uid -> UClass:package
+    UClass:uid -> UMethod:owner
+    UClass:uid -> UAttribute:type
+    UClass:uid -> UAttribute:owner
+    Visibility:uid -> UClass:vis
+    Visibility:uid -> UMethod:vis
+    Visibility:uid -> UAttribute:vis
+    UPackage:uid -> UPackage:parent
 }
