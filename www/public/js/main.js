@@ -29,7 +29,8 @@ run: function() {
 
     $(window).resize($.proxy(app.resize,this));
 
-    $("#settings a").click(function() { $("#settings-box").slideToggle(); });
+    $("#settings a").click(function() { $("#settings-box").slideToggle("fast"); });
+    $("#settings-box").mouseleave(function() { $("#settings-box").slideUp("fast"); });
     $("#theme-toggle").click(this.toggleTheme);
     
     $("button").button();
