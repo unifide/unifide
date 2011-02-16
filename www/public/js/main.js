@@ -3,16 +3,27 @@ app = null;
 
 // Start our app once it's all loaded.
 $(window).load(function() {
-    app = new Magnifide();
+    app = new Unifide();
+    app.run();
 });
 
-// Magnifide is our application class
-var Magnifide = Class.extend({
+// Unifide is our application class
+var Unifide = Class.extend({
 init: function() {
     this.theme = 0;
+},
+
+run: function() {
+    this.canvas = new Canvas("canvas");
     this.project = new Project();
     this.editors = [];
     this.editors.push(new Editor($("#editor")));
+
+    for(var e=0;e<this.editors.length;e++) {
+        this.editors[e].resize();
+        this.editors[e].draw();
+    }
+
     $("button").button();
     $("button#theme-toggle").button().click(this.toggleTheme);
 },

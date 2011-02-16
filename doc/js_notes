@@ -1,34 +1,36 @@
-Magnifide (main controller)
+Unifide (main controller)
     project : Project
+    canvas : Canvas
     editors : Editor[]
     theme : Theme
     user : User
 
 Project (main model)
-    units : Unit[] {1}
+    units : Unit[]
+    // not sure what else goes in here yet, project meta stuff anyway
 
 // A single element in the project, e.g. a class or table
 Unit
 
-UPackage : Unit
-UClass : Unit
-UMethod : Unit
-UTable : Unit
+UPackage -> Unit
+UClass -> Unit
+UMethod -> Unit
+UTable -> Unit
 
 // One editing panel, one window can have many of these
 Editor (main view)
-    contexts : Context[] {2}
+    contexts : Context[] // can have lots of contexts available
+    root : Context // this is the active context
 
 // An editor can have a single active context at a time
 Context (sub controller) {3}
     widget : ContextWidget {4}
 
-ProjectContext : Context
-PackageContext : Context
-ClassContext : Context
-MethodContext : Context
-DatabaseContext : Context
-TableContext : Context
+PackageContext -> Context
+ClassContext -> Context
+MethodContext -> Context
+DatabaseContext -> Context
+TableContext -> Context
 
 {1} Will probably need to be a more complex structure than just an array.
 {2} Even though an editor can have multiple contexts, only one is active at a time.
@@ -38,10 +40,18 @@ TableContext : Context
 
 Editor:
 
-Editor has one root ProjectContext.
-Main ProjectContext has a link to the main PackageContext, clicking this pushes the ProjectContext into a small bar on the left or top (stays here always, all the way to the bottom levels, clicking on it expands a small version of the ProjectContext, with the option to return to the main ProjectContext)
+All editors share a single canvas background, the editors simply know of their offset and size
 
-The main PackageContext contains a number of sub-PackageContexts, possibly stored in a quadtree.
+The editor's initial view is a project view, which is a purely HTML view of the project, has links to relevant resources, recently used units etc.
+
+A context can both have its own HTML elements as well as use the canvas in the background.
+e.g. a PackageContext might use the canvas for relationship lines and div elements for individual classes.
+
+Editor can have several context "branches", but one active at a time. For now, this is the class branch, with the initial context of the master PackageContext. Others branches may include the design and database branches.
+
+Editor has a link to the main PackageContext, clicking this minimises the editor/project view into a small bar on the left or top (stays here always, all the way to the bottom levels, clicking on it expands a small version of the project viewer, with the option to return to the main ProjectContext)
+
+The main PackageContext contains a number of sub-PackageContexts. (possibly stored in a quadtree? Irrelevant for now)
 As the user zooms into these packages and a threshold size is passed, their contents start to appear.
 
 A PackageContext can also contain ClassContexts.
@@ -53,7 +63,16 @@ In order of importance:
 * public method definitions
 * private method definitions
 
+Initially, it's probably enough to go from class name to all properties and methods, to full code editor.
+
+Mouse wheel anywhere apart from a text editor zooms the view. Double clicking on anything zooms directly into it to make it fullscreen.
+
+There's always a slim bar on the left which shows your current depth and the parent contexts, clicking on one zooms back to that context, keeping your previous context there in the list so you can go back immediately. Navigating away once you've navigated back clears the lower levels.
+
+Future additions, might be tricky:
 Classes nearer the center of the parent context get priority.
 Connected classes do not disappear from view but merge into the borders to form a list of related units.
 
 Clicking on a method header expands it to fill any free space. The next and previous method names are above and below the currently open method and clicking them switches to that method. The very top of the context contains the class name, clicking that goes to the top of the class definition and collapses all methods.
+
+Any code, including the method headers and other jazz, is still kept editable textually.

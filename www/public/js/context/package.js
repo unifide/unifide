@@ -1,24 +1,8 @@
-var Context = Class.extend({
+var PackageContext = Context.extend({
 init:function(editor, parent) {
-    this.editor = editor;
-    this.parent = parent;
+    this._super(editor, parent);
 
-    this.units = []; // any child contexts go here
-    this.top = 0; // the offset from the top for the current context
-    this.left = 0; // offset from the left
-    this.width = parent.width; // width allocated to the context
-    this.height = parent.height; // allocated height
-}
-});
-
-var ProjectContext = Context.extend({
-init:function(editor, parent) {
-    this._super(editor, editor);
-
-    this.resize();
-    this.draw();
-
-    this.elem = $('<div class="context-elem">ProjectContext HTML test</div>')
+    this.elem = $('<div class="context-elem">PackageContext HTML test</div>')
         .appendTo(this.parent.elem)
         .css({
             "position":"absolute",
@@ -30,13 +14,19 @@ init:function(editor, parent) {
         });
 },
 
+destroy:function() {
+    this.elem.remove();
+},
+
 resize:function() {
-    this.width = this.editor.width;
-    this.height = this.editor.height;
+    this.width = this.parent.width;
+    this.height = this.parent.height;
+    this.top = this.parent.top;
+    this.left = this.parent.left;
 },
 
 draw:function() {
-    var ctx = this.editor.canvas.ctx;
+    var ctx = app.canvas.ctx;
 
     ctx.beginPath();
     ctx.moveTo(0,0);
@@ -54,6 +44,6 @@ draw:function() {
     ctx.font = "bold 12px sans";
     ctx.textBaseline = "middle";
     ctx.textAlign = "center";
-    ctx.fillText("ProjectContext canvas test",this.width/2,this.height/2);
+    ctx.fillText("PackageContext canvas test",this.width/2,this.height/2);
 }
 });
