@@ -2,25 +2,9 @@
 <div id="topbar" class="border-bottom">
     <div id="settings"><a>settings</a></div>
     <div id="settings-box" class="border opaque">
-        <a id="theme-toggle">Toggle theme</a>
+        <a id="theme-toggle">Toggle theme</a><br/>
+        <a href="class">Edit classes</a>
     </div>
     <div id="title">unif<span class="orange">ide</span></div>
 </div>
 <div id="editor" style="width:50%;height:50%;position:absolute;top:22px;right:0px"></div>
-
-<div>
-	<span>All Classes:</span>
-	
-	<%if UClass.all.empty?%>
-	<p>No Classes!</p>
-	<%else%>
-	<ul>
-		<%UClass.all.each do |uclass|%>
-		<li><a href="class/<%=uclass.name%>"><%=uclass.name%></a></li>
-		<%end%>
-	</ul>
-	<%end%>
-</div>
-<div>
-	<%= erb :_uclass_form %>
-</div>

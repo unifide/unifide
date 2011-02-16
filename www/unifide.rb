@@ -14,40 +14,44 @@ class Unifide < Sinatra::Base
         erb :index
     end
 
-	get '/class/:name' do |n|
-		@uclass = UClass.where(:name => n).first
-		if @uclass
-			@mtypes = UClass.all
-			erb :uclass
-		else
-			erb :index
-		end
-	end
+    get '/class' do
+        erb :class
+    end
 
-	post '/class' do
-		if params[:name].nil? or params[:visibility].nil?
-			redirect '/'
-		else
-			@uclass = UClass.create(:name => params[:name], :visibility_id => params[:visibility])
-			if @uclass
-				@mtypes = UClass.all
-				erb :uclass
-			else
-				redirect '/'
-			end
-		end
-	end
+    get '/class/:name' do |n|
+        @uclass = UClass.where(:name => n).first
+        if @uclass
+            @mtypes = UClass.all
+            erb :uclass
+        else
+            erb :index
+        end
+    end
 
-	post '/attribute' do
-		if params[:name].nil? or params[:type].nil? or params[:visibility].nil? or params[:class].nil? or params[:type].nil?
-			redirect '/'
-		else
-			@uattribute = UAttribute.create(:name => params[:name], :visibility_id => params[:visibility], :owner_id => params[:class], :type_id => params[:type])
-			if @uattribute
-				redirect "/class/#{@uattribute.owner.name}"
-			else
-				redirect '/'
-			end
-		end
-	end
+    post '/class' do
+        if params[:name].nil? or params[:visibility].nil?
+            redirect '/class'
+        else
+            @uclass = UClass.create(:name => params[:name], :visibility_id => params[:visibility])
+            if @uclass
+                @mtypes = UClass.all
+                erb :uclass
+            else
+                redirect '/'
+            end
+        end
+    end
+
+    post '/attribute' do
+        if params[:name].nil? or params[:type].nil? or params[:visibility].nil? or params[:class].nil? or params[:type].nil?
+            redirect '/'
+        else
+            @uattribute = UAttribute.create(:name => params[:name], :visibility_id => params[:visibility], :owner_id => params[:class], :type_id => params[:type])
+            if @uattribute
+                redirect "/class/#{@uattribute.owner.name}"
+            else
+                redirect '/'
+            end
+        end
+    end
 end

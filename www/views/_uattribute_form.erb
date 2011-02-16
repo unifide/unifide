@@ -1,19 +1,19 @@
 <form method="post" action="/attribute" id="attribute-form">
-	<input type="hidden" name="class" value="<%=@uclass.id%>"/>
-	<select name="visibility">
-	<%Visibility.all.each do |v|%>
-		<option value="<%=v.id%>"><%=v.name%></option>
-	<%end%>
-	</select>
-	<select name="type">
-	<%@mtypes.each do |t|%>
-		<option value="<%=t.id%>"><%=t.name%></option>
-	<%end%>
-	</select>
-	<span>
-		<label for="name">Name</label>
-		<input type="text" name="name"/>
-	</span><br/>
+    <input type="hidden" name="class" value="<%=@uclass.id%>"/>
+    <select name="visibility">
+    <%Visibility.all.each do |v|%>
+        <option value="<%=v.id%>"><%=v.name%></option>
+    <%end%>
+    </select>
+    <select name="type">
+    <%@mtypes.each do |t|%>
+        <option value="<%=t.id%>"><%=t.name%></option>
+    <%end%>
+    </select>
+    <span>
+        <label for="name">Name</label>
+        <input type="text" name="name"/>
+    </span><br/>
 
-	<button type="submit">Add</button>
+    <button type="submit">Add</button>
 </form>

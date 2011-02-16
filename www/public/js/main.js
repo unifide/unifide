@@ -3,8 +3,10 @@ app = null;
 
 // Start our app once it's all loaded.
 $(window).load(function() {
-    app = new Unifide();
-    app.run();
+    if($("#canvas").length){
+        app = new Unifide();
+        app.run();
+    }
 });
 
 
