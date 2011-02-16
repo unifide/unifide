@@ -27,8 +27,10 @@ run: function() {
 
     $(window).resize($.proxy(app.resize,this));
 
+    $("#settings a").click(function() { $("#settings-box").slideToggle(); });
+    $("#theme-toggle").click(this.toggleTheme);
+    
     $("button").button();
-    $("button#theme-toggle").button().click(this.toggleTheme);
 },
 
 toggleTheme: function() {

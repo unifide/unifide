@@ -1,0 +1,32 @@
+@import url("jquery-ui.css");
+
+body {
+    background-color:#666;
+    color:#EEE;
+}
+.orange {
+    color:#FC0;
+}
+a {
+    color:#FED;
+}
+
+.border-bottom {
+    border-bottom:1px solid #222;
+}
+.border-top {
+    border-top:1px solid #222;
+}
+.border-left {
+    border-left:1px solid #222;
+}
+.border-right {
+    border-right:1px solid #222;
+}
+.border {
+    border:1px solid #222;
+}
+
+.opaque {
+    background-color:#666;
+}
