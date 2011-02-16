@@ -1,0 +1,69 @@
+// command: dot -T png -o tables.png tables.dot
+
+digraph g {
+    overlap = false
+
+    node [
+        shape = Mrecord
+        fontsize = 8
+        fontname = mono
+    ]
+
+    edge [
+        fontsize = 8
+        fontname = mono
+        arrowhead = none
+        headlabel = "n"
+        taillabel = "1"
+    ]
+
+    User [
+        label = "{User|\
+            <name>name\l|\
+            email\l|\
+            password\l|\
+            joindate\l}"
+    ]
+    UProject [
+        label = "{UProject|\
+            name\l|\
+            <creator>creator\l|\
+            <collaborators>collaborators\l|\
+            creation date\l}"
+    ]
+
+    UProject:creator -> User:name
+
+    UPackage [
+        label = "{UPackage|\
+            <name>name\l|\
+            <parent>parent\l|\
+            creation date\l}"
+    ]
+    UClass [
+        label = "{UClass|\
+            <name>name\l|\
+            <package>package\l|\
+            <parent>parent\l|\
+            creation date\l}"
+    ]
+    UMethod [
+        label = "{UMethod|\
+            <name>name\l|\
+            <owner>owner\l|\
+            creation date\l|\
+            visbility\l}"
+    ]
+    UAttribute [
+        label = "{UAttribute|\
+            <type>type\l|\
+            <owner>owner\l|\
+            creation date\l|\
+            visibility\l}"
+    ]
+
+    UPackage:name -> UClass:package
+    UClass:name -> UMethod:owner
+    UClass:name -> UAttribute:type
+    UClass:name -> UAttribute:owner
+}
