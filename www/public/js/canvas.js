@@ -10,8 +10,8 @@ init: function(id) {
 },
 
 resize: function() {
-    this.width = $(this.elem).width();
-    this.height = $(this.elem).height();
+    this.width = $(window).width();
+    this.height = $(window).height();
 
     this.elem.width = this.width;
     this.elem.height = this.height;
