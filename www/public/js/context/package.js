@@ -7,10 +7,11 @@ init:function(editor, parent) {
         .css({
             "position":"absolute",
             "top":"0px",
-            "left":"0px",
+            "left":"-10px",
             "margin":"5px",
             "font":"bold 12px sans",
-            "color":"black"
+            "color":"black",
+            "border":"1px solid black"
         });
 },
 

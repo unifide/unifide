@@ -1,6 +1,7 @@
 var Editor = Class.extend({
 init: function(elem) {
-    this.elem = elem;
+    this.parent = elem;
+    this.elem = $("<div/>").appendTo(elem).addClass("contextDiv");
 
     this.resize(); // first resize makes sure everything is the right size
     this.root = new PackageContext(this, this);
@@ -20,10 +21,17 @@ draw: function() {
 },
 
 resize: function() {
-    this.top = this.elem.offset().top;
-    this.left = this.elem.offset().left;
-    this.width = this.elem.width();
-    this.height = this.elem.height();
+    this.top = this.parent.offset().top;
+    this.left = this.parent.offset().left;
+    this.width = this.parent.width();
+    this.height = this.parent.height();
+    
+    this.elem.css({
+        top:this.top,
+        left:this.left,
+        width:this.width,
+        height:this.height
+    });
 
     if(this.root)
         this.root.resize();
