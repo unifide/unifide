@@ -51,6 +51,7 @@ toggleTheme: function() {
 },
 
 resize: function() {
+    $("#fullscreen").height($(window).height() - $("#topbar").height() - 1)
     this.canvas.resize();
     for(var e=0;e<this.editors.length;e++) {
         this.editors[e].resize();
