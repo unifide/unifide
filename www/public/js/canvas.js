@@ -1,7 +1,7 @@
 var Canvas = Class.extend({
 init: function(id) {
     this.elem = document.getElementById("canvas");
-    this.ctx = canvas.getContext("2d");
+    this.ctx = this.elem.getContext("2d");
 
     if(this.ctx) this.supported = true;
     else this.supported = false;
