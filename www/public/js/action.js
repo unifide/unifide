@@ -23,7 +23,7 @@ do:function(action) {
     }
     this.stack.push(action);
 
-    this.redo(true);
+    this._redo();
 },
 undo:function() {
     if(this.canUndo()) {
@@ -31,11 +31,14 @@ undo:function() {
         this.ptr--;
     }
 },
-redo:function(force) {
-    if(this.canRedo() || force) {
-        this.ptr++;
-        this.stack[this.ptr].do(this.stack[this.ptr].data);
+redo:function() {
+    if(this.canRedo()) {
+        this._redo();
     }
+},
+_redo:function() {
+    this.ptr++;
+    this.stack[this.ptr].do(this.stack[this.ptr].data);
 },
 canUndo:function() {
     return this.ptr > -1;
