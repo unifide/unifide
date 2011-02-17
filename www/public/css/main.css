@@ -30,11 +30,11 @@ a:hover {
     position:absolute;
     right:0px;
     top:20px;
-    width:100px;
-    height:100px;
-    padding:5px;
     z-index:99;
     display:none;
+}
+.settings-item {
+    padding:3px;
 }
 
 div.contextDiv {
