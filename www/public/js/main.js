@@ -17,6 +17,7 @@ init: function() {
 },
 
 run: function() {
+    this.actions = new ActionStack();
     this.canvas = new Canvas("canvas");
     this.project = new Project();
     this.editors = [];
