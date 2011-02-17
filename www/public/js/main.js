@@ -22,10 +22,7 @@ run: function() {
     this.editors = [];
     this.editors.push(new Editor($("#editor")));
 
-    for(var e=0;e<this.editors.length;e++) {
-        this.editors[e].resize();
-        this.editors[e].draw();
-    }
+    this.resize();
 
     $(window).resize($.proxy(app.resize,this));
 
