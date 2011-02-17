@@ -33,7 +33,13 @@ resize: function() {
         height:this.height
     });
 
-    if(this.root)
+    if(this.root) {
+        this.root.top = this.top;
+        this.root.left = this.left;
+        this.root.width = this.width;
+        this.root.height = this.height;
+
         this.root.resize();
+    }
 },
 });
