@@ -15,7 +15,7 @@ require 'visibility'
 
 require 'unit'
 require 'association'
-require 'property'
+require 'unit_property'
 require 'property_value'
 
 require 'association_type'
