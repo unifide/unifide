@@ -14,18 +14,22 @@ class Unifide < Sinatra::Base
         erb :index
     end
 
-    get '/class' do
-        erb :class
+    get '/units' do
+        erb :units
     end
 
-    get '/class/:name' do |n|
-        @uclass = UClass.where(:name => n).first
-        if @uclass
-            @mtypes = UClass.all
-            erb :uclass
-        else
-            erb :index
-        end
+    get '/:utype/:name' do |t,n|
+	utype = UnitType.where(:name => t).first
+	if utype.nil?
+	    erb :units
+	else
+	    @unit = Unit.where(:unit_type_id => utype.id, :name => n).first
+	    if @unit.nil?
+		erb :units
+	    else
+		erb :unit
+	    end
+	end
     end
 
     post '/class' do

@@ -1,0 +1,23 @@
+<div>
+    <h2>All Units</h2>
+    <%if Unit.all.empty?%>
+    <p>No Units! You need to set up some defaults!</p>
+    <%else
+	UnitType.all.each do |utype|%>
+    <h3><%=utype.name%> Units</h3>
+	<%
+	    units = utype.units
+	    if units.empty?
+	%>
+	<p>No <%=utype.name%> Units!</p>
+	<%  else%>
+    <ul>
+		<%units.each do |unit|%>
+        <li><a href="<%=unit.unit_type.name%>/<%=unit.name%>"><%=unit.name%></a></li>
+		<%end%>
+    </ul>
+	    <%
+	    end
+	end
+    end%>
+</div>
