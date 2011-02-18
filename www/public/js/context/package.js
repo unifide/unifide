@@ -1,20 +1,28 @@
 var PackageContext = Context.extend({
-init:function(editor, parent) {
+init:function(editor, parent, package) {
     this._super(editor, parent);
 
-    this.elem = $('<div class="context-elem">Package</div>')
-        .appendTo(this.parent.elem)
-        .css({
-            "position":"absolute",
-            "top":"0px",
-            "left":"0px",
-            "margin":"5px",
-            "font":"bold 12px sans",
-            "color":"black",
-            "border":"1px solid black"
-        });
+    this.label = "PackageContext: "+package;
+    app.loader.start(this,this.label);
 
-    this.class = new ClassContext(editor,this);
+    app.data.fetch("Package",package,$.proxy(function(unit){
+        this.package = unit;
+
+        this.elem = $('<div class="context-elem">'+this.package.name+'</div>')
+            .appendTo(this.parent.elem)
+            .css({
+                "position":"absolute",
+                "top":"0px",
+                "left":"0px",
+                "margin":"5px",
+                "font":"bold 12px sans",
+                "color":"black",
+                "border":"1px solid black"
+            });
+
+        this.class = new ClassContext(editor,this);
+        app.loader.end(this);
+    },this),2);
 },
 
 destroy:function() {

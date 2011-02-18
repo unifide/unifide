@@ -4,7 +4,7 @@ init: function(elem) {
     this.elem = $("<div/>").appendTo(elem).addClass("contextDiv");
 
     this.resize(); // first resize makes sure everything is the right size
-    this.root = new PackageContext(this, this);
+    this.root = new PackageContext(this, this, "MyPackage");
 },
 
 destroy: function() {
