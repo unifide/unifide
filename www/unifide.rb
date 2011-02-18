@@ -19,44 +19,22 @@ class Unifide < Sinatra::Base
         erb :units
     end
 
-    get '/:utype/:name' do |t,n|
-	utype = UnitType.where(:name => t).first
-	if utype.nil?
-	    erb :units
-	else
-	    @unit = Unit.where(:unit_type_id => utype.id, :name => n).first
-	    if @unit.nil?
-		erb :units
-	    else
-		erb :unit
-	    end
-	end
-    end
+#    get '/:utype/:name' do |t,n|
+#	utype = UnitType.where(:name => t).first
+#	if utype.nil?
+#	    erb :units
+#	else
+#	    nametype = UnitType.where(:name => "Name").first
+#	    hasname = AssociationType.where(:name => "Has Name").first
+#	    name = Unit.where(:unit_type => nametype, :value => n).first
+#	    assoc = Association.where(:association_type => hasname, :to => name).first
+#	    @unit = assoc.from
+#	    if @unit.nil?
+#		erb :units
+#	    else
+#		erb :unit
+#	    end
+#	end
+#    end
 
-    post '/class' do
-        if params[:name].nil? or params[:visibility].nil?
-            redirect '/class'
-        else
-            @uclass = UClass.create(:name => params[:name], :visibility_id => params[:visibility])
-            if @uclass
-                @mtypes = UClass.all
-                erb :uclass
-            else
-                redirect '/'
-            end
-        end
-    end
-
-    post '/attribute' do
-        if params[:name].nil? or params[:type].nil? or params[:visibility].nil? or params[:class].nil? or params[:type].nil?
-            redirect '/'
-        else
-            @uattribute = UAttribute.create(:name => params[:name], :visibility_id => params[:visibility], :owner_id => params[:class], :type_id => params[:type])
-            if @uattribute
-                redirect "/class/#{@uattribute.owner.name}"
-            else
-                redirect '/'
-            end
-        end
-    end
 end
