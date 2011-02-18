@@ -122,3 +122,17 @@ When a PackageContext creates a class, it creates a ClassContext. This context a
     ... // more packages, classes and associations
   }]
 }
+
+
+Saving:
+
+Content is autosaved every time a change is made (after a delay to prevent flooding).
+Autosave content is pushed to all active clients
+The delta is stored in the DB.
+Once a manual save is made, the changes are merged.
+One Unit can be edited at a time, other editors/sessions will see the unit as locked.
+The session id, editor id and user id need to be saved alongside the delta
+Once a unit is saved, its diff is merged and all locks are released
+If a user navigates away or a timeout is reached, the locks are released but the diff is not merged or deleted.
+A user can unlock a file it has locked elsewhere
+The delta needs to contain changes to any properties and associations, as well as the unit's inner content (if applicable to the unit)
