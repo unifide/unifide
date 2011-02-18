@@ -17,6 +17,7 @@ init: function() {
 },
 
 run: function() {
+    this.loader = new Loader();
     this.project = new Project();
     this.actions = new ActionStack();
     this.data = new DataRepository();
@@ -25,15 +26,17 @@ run: function() {
     this.editors = [];
     this.editors.push(new Editor($("#editor")));
 
-    this.resize();
+    this.loader.onLoad($.proxy(function() {
+        this.resize();
 
-    $(window).resize($.proxy(app.resize,this));
+        $(window).resize($.proxy(app.resize,this));
 
-    $("#settings a").click(function() { $("#settings-box").slideToggle("fast"); });
-    $("#settings-box").mouseleave(function() { $("#settings-box").slideUp("fast"); });
-    $("#theme-toggle").click(this.toggleTheme);
-    
-    $("button").button();
+        $("#settings a").click(function() { $("#settings-box").slideToggle("fast"); });
+        $("#settings-box").mouseleave(function() { $("#settings-box").slideUp("fast"); });
+        $("#theme-toggle").click(this.toggleTheme);
+        
+        $("button").button();
+    },this));
 },
 
 toggleTheme: function() {
