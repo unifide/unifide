@@ -20,4 +20,5 @@ require 'property_value'
 
 require 'association_type'
 require 'unit_type'
+require 'association_type_unit_type'
 require 'property_type'
