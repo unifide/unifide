@@ -17,9 +17,11 @@ init: function() {
 },
 
 run: function() {
-    this.actions = new ActionStack();
-    this.canvas = new Canvas("canvas");
     this.project = new Project();
+    this.actions = new ActionStack();
+    this.data = new DataRepository();
+
+    this.canvas = new Canvas("canvas");
     this.editors = [];
     this.editors.push(new Editor($("#editor")));
 
