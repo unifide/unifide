@@ -76,3 +76,49 @@ Connected classes do not disappear from view but merge into the borders to form 
 Clicking on a method header expands it to fill any free space. The next and previous method names are above and below the currently open method and clicking them switches to that method. The very top of the context contains the class name, clicking that goes to the top of the class definition and collapses all methods.
 
 Any code, including the method headers and other jazz, is still kept editable textually.
+
+
+Architecture:
+
+Unifide contains a number of DataProcessor types. The one we're interested for the moment is CodeProcessor.
+Each programming language supported by Unifide implements its own CodeProcessor and is in charge of interpreting the data received from the server by Contexts.
+
+Example.
+The current project has a CodeProcessor of type RubyProcessor.
+An editor creates a PackageContext.
+This context requests a top level list of packages and classes (possibly global/package variables and functions) from the server.
+The server responds with a JSON message [1].
+The context sends the data to its RubyProcessor.
+The processor calls PackageContext methods such as createPackage(), createClass(), extends(superc,subc), implements(interface,subc) to create the data state, as well as sending information on how the data can be edited. These simpler actions may be inherited from the main CodeProcessor as they will be the same for most languages.
+Whenever a new Context is made, it is either given information about where to find its data on the server, or given the data itself if it has been loaded previously (a single JSON request may send more than one layer of packages and classes).
+PackageContexts continue this process recursively.
+When a PackageContext creates a class, it creates a ClassContext. This context also sends data to the project's DataProcessor, but this time it needs more specialised functionality. The RubyProcessor will output class names with the correct inheritance format, and use the correct method signatures for ruby. The visual side of things will still be handled by ClassContext.
+
+[1] JSON example for the root PackageContext for MyApp: {
+  "type":"package",
+  "name":"MyApp",
+  "contents":[{
+    "type":"package",
+    "name":"MyApp.SomePackage",
+    "contents":[{
+      "type":"class",
+      "name":"MyApp.SomePackage.SomeClass",
+      "contents":[{
+        "type":"property",
+        "property_type":"visibility",
+        "value":"public"
+      },{
+        ... // more contents
+      }]
+    },{
+      "type":"association",
+      "association_type":"extends"
+      "from":"MyApp.SomePackage.SomeClass",
+      "to":"MyApp.SomeOtherPackage.SuperClass"
+    },{
+      ... // more packages, classes and associations
+    }]
+  },{
+    ... // more packages, classes and associations
+  }]
+}
