@@ -88,7 +88,9 @@ The current project has a CodeProcessor of type RubyProcessor.
 An editor creates a PackageContext.
 This context requests a top level list of packages and classes (possibly global/package variables and functions) from the server.
 The server responds with a JSON message [1].
-The context sends the data to its RubyProcessor.
+Data is sent to the main data repository (see next part).
+The context checks with the main project to see which Package is the root package.
+The context tells RubyProcessor which Unit it needs to process (main package).
 The processor calls PackageContext methods such as createPackage(), createClass(), extends(superc,subc), implements(interface,subc) to create the data state, as well as sending information on how the data can be edited. These simpler actions may be inherited from the main CodeProcessor as they will be the same for most languages.
 Whenever a new Context is made, it is either given information about where to find its data on the server, or given the data itself if it has been loaded previously (a single JSON request may send more than one layer of packages and classes).
 PackageContexts continue this process recursively.
@@ -130,20 +132,61 @@ Method("MyPackage.MyClass.AMethod") implements Method("MyPackage.SomeInterface.A
 
 Data storage and access:
 
-Once the above data has been parsed, it creates a similar structure, but with integer references replaced by actual references.
-It also creates an index of "Type!Value" references, e.g.
-index["Package!MyPackage"] = ["Package","MyPackage",{...}]
+Once the above data has been parsed, it creates a similar structure, but with integer references replaced by actual references, as well as reverse associations. It is also indexed by "Type!Value" strings, e.g.
+data["Interface!MyPackage.SomeInterface"] = {
+    type:"Interface",
+    name:"MyPackge.SomeInterface",
+    assoc:{
+        "hasKeyword":{
+            "Keyword!Public":{
+                type:"Keyword",
+                name:"Public",
+                assoc:{...},
+                reverse:{...}
+            }
+        },
+        "hasMethod":{
+            "Method!MyPackage.SomeInterface.AMethod":{
+                type:"Method",
+                name:"MyPackage.SomeInterface.AMethod",
+                assoc:{...},
+                reverse:{...}
+            }
+        }
+    },
+    reverse:{
+        "hasChild":{
+            "Package!MyPackage":{
+                type:"Package",
+                name:"MyPackage",
+                assoc:{...},
+                reverse:{...}
+            }
+        },
+        "implements":{
+            "Class!MyPackage.MyClass":{
+                type:"Class",
+                name:"MyPackage.MyClass",
+                assoc:{...},
+                reverse:{...}
+            }
+        }
+    }
+}
 
 The data is accessed like so:
 app.data.get("Package","MyPackage")
-returns: ["Package","MyPackage",
-    "hasChild":[
-        ["Interface","MyPackage.SomeInterface",{...}],
-        ["Interface","MyPackage.SomeInterface",{...}]
-    ]
-]
+returns: {
+    type:"Package",
+    name:"MyPackage",
+    assoc:{"hasChild":{...}},
+    reverse:{}
+}
+or alternatively:
+app.data["Package!MyPackage"];
+
 Inner objects are references to other Units, meaning the structure is fully traversable.
-Reference loops are possible.
+Reference loops occur so do not attempt exhaustive recursion.
 
 
 Saving:

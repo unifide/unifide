@@ -1,7 +1,6 @@
 class JSONReply
-    def JSONReply.reply(context,query)
-        case context
-        when 'Editor'
+    def JSONReply.reply(type,name,depth)
+        if type == "Package" and name == "MyPackage" then
             return <<-EOF
 [["Package","MyPackage",{"hasChild":[1,2]}],
 ["Interface","MyPackage.SomeInterface",{"hasKeyword":[3],"hasMethod":[4]}],
@@ -12,7 +11,7 @@ class JSONReply
 ["Method","MyPackage.MyClass.AMethod",{"implements":[4]}]]
 EOF
         else
-            return '{"error":"No reply for '+context+'/'+query+'"}'
+            return '{"error":"No reply for '+type+'/'+name+' (depth:'+depth+')"}'
         end
     end
 end
