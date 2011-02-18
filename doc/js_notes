@@ -94,34 +94,36 @@ Whenever a new Context is made, it is either given information about where to fi
 PackageContexts continue this process recursively.
 When a PackageContext creates a class, it creates a ClassContext. This context also sends data to the project's DataProcessor, but this time it needs more specialised functionality. The RubyProcessor will output class names with the correct inheritance format, and use the correct method signatures for ruby. The visual side of things will still be handled by ClassContext.
 
-[1] JSON example for the root PackageContext for MyApp: {
-  "type":"package",
-  "name":"MyApp",
-  "contents":[{
-    "type":"package",
-    "name":"MyApp.SomePackage",
-    "contents":[{
-      "type":"class",
-      "name":"MyApp.SomePackage.SomeClass",
-      "contents":[{
-        "type":"property",
-        "property_type":"visibility",
-        "value":"public"
-      },{
-        ... // more contents
-      }]
-    },{
-      "type":"association",
-      "association_type":"extends"
-      "from":"MyApp.SomePackage.SomeClass",
-      "to":"MyApp.SomeOtherPackage.SuperClass"
-    },{
-      ... // more packages, classes and associations
-    }]
-  },{
-    ... // more packages, classes and associations
-  }]
-}
+[1] JSON example for the root PackageContext for MyApp:
+[
+    ["Package","MyPackage",[
+        ["hasChild","Interface","MyPackage.SomeInterface"],
+        ["hasChild","Class","MyPackage.MyClass"]
+    ]],
+    ["Interface","MyPackage.SomeInterface",[
+        ["hasKeyword","Keyword","public"],
+        ["hasMethod","Method","MyPackage.SomeInterface.AMethod"]
+    ]],
+    ["Class","MyPackage.MyClass",[
+        ["implements","Interface","MyPackage.SomeInterface"],
+        ["hasKeyword","Keyword","public"],
+        ["hasKeyword","Keyword","abstract"],
+        ["hasMethod","Method","MyPackage.MyClass.AMethod"]
+    ]],
+    ["Method","MyPackage.MyClass.AMethod",[
+        ["implements","Method","MyPackage.SomeInterface.AMethod"]
+    ]]
+]
+
+Package("MyPackage") hasChild Interface("MyPackage.SomeInterface")
+Interface("MyPackage.SomeInterface") hasKeyword Keyword("public")
+Interface("MyPackage.SomeInterface") hasMethod Method("MyPackage.SomeInterface.AMethod")
+Package("MyPackage") hasChild Class("MyPackage.MyClass")
+Class("MyPackage.Myclass") implements Interface("MyPackage.SomeInterface")
+Class("MyPackage.MyClass") hasKeyword Keyword("public")
+Class("MyPackage.MyClass") hasKeyword Keyword("abstract")
+Class("MyPackage.MyClass") hasMethod Method("MyPackage.MyClass.AMethod")
+Method("MyPackage.MyClass.AMethod") implements Method("MyPackage.SomeInterface.AMethod")
 
 
 Saving:
