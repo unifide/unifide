@@ -3,25 +3,13 @@ class JSONReply
         case context
         when 'Editor'
             return <<-EOF
-[
-    ["Package","MyPackage",[
-        ["hasChild","Interface","MyPackage.SomeInterface"],
-        ["hasChild","Class","MyPackage.MyClass"]
-    ]],
-    ["Interface","MyPackage.SomeInterface",[
-        ["hasKeyword","Keyword","public"],
-        ["hasMethod","Method","MyPackage.SomeInterface.AMethod"]
-    ]],
-    ["Class","MyPackage.MyClass",[
-        ["implements","Interface","MyPackage.SomeInterface"],
-        ["hasKeyword","Keyword","public"],
-        ["hasKeyword","Keyword","abstract"],
-        ["hasMethod","Method","MyPackage.MyClass.AMethod"]
-    ]],
-    ["Method","MyPackage.MyClass.AMethod",[
-        ["implements","Method","MyPackage.SomeInterface.AMethod"]
-    ]]
-]
+[["Package","MyPackage",{"hasChild":[1,2]}],
+["Interface","MyPackage.SomeInterface",{"hasKeyword":[3],"hasMethod":[4]}],
+["Class","MyPackage.MyClass",{"implements":[1],"hasKeyword":[3,5],"hasMethod":[6]}],
+["Keyword","public",{}],
+["Method","MyPackage.SomeInterface.AMethod",{}],
+["Keyword","abstract",{}],
+["Method","MyPackage.MyClass.AMethod",{"implements":[4]}]]
 EOF
         else
             return '{"error":"No reply for '+context+'/'+query+'"}'
