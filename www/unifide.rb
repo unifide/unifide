@@ -9,10 +9,10 @@ class Unifide < Sinatra::Base
         erb :index
     end
 
-    get '/json/:context/:query' do
+    get '/json/:context/:query' do |context,query|
         #response.headers['Content-type'] = 'application/json'
         response.headers['Content-type'] = 'text/plain'
-        JSONReply.reply(:context,:query)
+        JSONReply.reply(context,query)
     end
 
     get '/units' do
