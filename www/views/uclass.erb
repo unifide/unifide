@@ -1,8 +1,0 @@
-<div>
-    <h1><%=@uclass.name%></h1>
-    <h2>Attributes</h2>
-    <%@uclass.u_attributes.each do |a|%>
-    <span><%=a.visibility.name%> <%=a.type.name%> <%=a.name%></span><br/>
-    <%end%>
-    <%= erb :_uattribute_form%>
-</div>

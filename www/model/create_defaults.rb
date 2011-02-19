@@ -26,9 +26,9 @@ attributeType = UnitType.create(:name=>"Attribute")
 visibilityType = UnitType.create(:name=>"Visibility")
 booleanType = UnitType.create(:name=>"Boolean")
 
-hasname = AssociationType.create(:name=>"Has Name")
-extends = AssociationType.create(:name=>"Extends")
-hasowner = AssociationType.create(:name=>"Has Owner")
+hasname = AssociationType.create(:name=>"hasName")
+extends = AssociationType.create(:name=>"hasSuperclass")
+hasowner = AssociationType.create(:name=>"hasOwner")
 
 makeATUT classType, extends, classType, 0, 1
 makeATUT classType, hasowner, packageType, 1, 1

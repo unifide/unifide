@@ -27,4 +27,9 @@ class Unifide < Sinatra::Base
 	end
     end
 
+    post '/unit' do
+	@unit = Unit.create(params)
+	redirect '/units'
+    end
+
 end

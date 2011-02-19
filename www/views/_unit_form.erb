@@ -1,0 +1,23 @@
+<form method="post" action="unit" id="unit-form">
+<%  
+if @unit_type.nil?
+%>
+<select name="unit_type_id">
+<%
+    UnitType.all.each do |ut|
+%>
+    <option value="<%=ut.id%>"><%=ut.name%></option>
+<%
+    end
+%>
+</select>
+<%
+else
+%>
+    <input type="hidden" name="unit_type_id" value="<%=@unit_type.id%>"/>
+<%
+end
+%>
+    <input type="text" name="value"/>
+    <button type="submit">Create <%=@unit_type.nil? ? "Unit" : @unit_type.name%></button>
+</form>
