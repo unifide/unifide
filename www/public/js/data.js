@@ -19,7 +19,29 @@ get:function(type,name) {
 },
 remove:function(type,name) {
     // removes the unit and any associations it's linked to
-    console.error("DataRepository.remove not implemented");
+    var id = type+"!"+name;
+    var u = this[id];
+    if(!u) return;
+
+    var isEmpty = function(o) {for(var e in o){return false}return true};
+
+    for(var a in u.assoc) {
+        for(var o in u.assoc[a]) {
+            var rev = u.assoc[a][o].reverse;
+            delete rev[a][id];
+            if(isEmpty(rev[a]))
+                delete rev[a];
+        }
+    }
+    for(var a in u.reverse) {
+        for(var o in u.reverse[a]) {
+            var as = u.reverse[a][o].assoc;
+            delete as[a][id];
+            if(isEmpty(as[a]))
+                delete as[a];
+        }
+    }
+    delete this[id];
 },
 _processJSON:function(json) {
     var map = []; // maps json index to final object
@@ -52,6 +74,6 @@ _processJSON:function(json) {
             }
         }
     }
-    return map[0];
+    return map[0]; // return the requested unit
 }
 });
