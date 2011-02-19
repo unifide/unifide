@@ -2,7 +2,7 @@ var DataRepository = Class.extend({
 init:function() {},
 fetch:function(type,name,callback,depth,force) {
     // return if we have it already, unless forcing
-    if(this[type+"!"+name] && !force) return this[type+"!"+name];
+    if(this[type+":"+name] && !force) return this[type+":"+name];
     // depth is association recursion depth
     if(!depth) depth = 0;
     // Fetch the required unit
@@ -29,11 +29,11 @@ fetch:function(type,name,callback,depth,force) {
     });
 },
 get:function(type,name) {
-    return this[type+"!"+name];
+    return this[type+":"+name];
 },
 remove:function(type,name) {
     // removes the unit and any associations it's linked to
-    var id = type+"!"+name;
+    var id = type+":"+name;
     var u = this[id];
     if(!u) return;
 
@@ -68,7 +68,7 @@ _processJSON:function(json) {
     // write units to memory
     for(var i=0;i<json.data.length;i++) {
         var j = json.data[i];
-        var id = j[0]+"!"+j[1]; // Type!Name
+        var id = j[0]+":"+j[1]; // Type!Name
 
         if(!this[id]) { // prepare object if it doesn't exist
             this[id] = new Unit(j[0],j[1]);
@@ -79,7 +79,7 @@ _processJSON:function(json) {
     // apply associations
     for(var i=0;i<json.data.length;i++) {
         var j = json.data[i];
-        var id = j[0]+"!"+j[1];
+        var id = j[0]+":"+j[1];
         var u = this[id];
         
         for(var a in j[2]) { // a = association name
@@ -87,16 +87,12 @@ _processJSON:function(json) {
             for(var t=0;t<acc.length;t++) {
                 var at = map[acc[t]]; // association target
                 u.addAssociation(a,at);
-/*                if(!at.reverse[a]) { // prep reverse
-                    at.reverse[a] = {};
-                }
-                at.reverse[a][u.type+"!"+u.name] = u;*/
             }
         }
     }
 
     // update depths
-    var root = this[json.type+"!"+json.name];
+    var root = this[json.type+":"+json.name];
     this._updateDepth(root,json.depth);
 
     return root; // return the requested unit
@@ -142,7 +138,7 @@ init:function(type) {
     this.data = {};
 },
 add:function(unit) {
-    this.data[unit.type+"!"+unit.name] = unit;
+    this.data[unit.type+":"+unit.name] = unit;
 },
 each:function(type) {
     var output = new AssociationSet();
@@ -157,7 +153,7 @@ each:function(type) {
 get:function(type,name) {
     if(type && name) {
         // return directly if type and name defined
-        return this.data[type+"!"+name];
+        return this.data[type+":"+name];
     } else if(type) {
         // return first of type if type declared
         for(var u in this.data) {

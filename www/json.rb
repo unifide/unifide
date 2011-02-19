@@ -10,12 +10,12 @@ class JSONReply
     ["Method","MyPackage.SomeInterface.AMethod",{}],
     ["Keyword","abstract",{}],
     ["Method","MyPackage.MyClass.AMethod",{"Interface":[4]}],
-    ["Geometry","80x60+10+10",{}],
-    ["Geometry","20x50+20+20",{}],
-    ["Geometry","20x50+60+20",{}]
+    ["Geometry","ClassDiagram(Package:MyPackage)",{},{"width":"80","height":"80","top":"10","left":"10"}],
+    ["Geometry","ClassDiagram(Interface:MyPacakge.SomeInterface)",{}],
+    ["Geometry","ClassDiagram(Class:MyPackage.MyClass)",{}],
+    ["ClassDiagram","MyPackage",{"Package":[0]}]
 ]}
 EOF
-        else
             return '{"error":"No reply for '+type+'/'+name+'"}'
         end
     end
