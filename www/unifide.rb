@@ -18,22 +18,13 @@ class Unifide < Sinatra::Base
         erb :units
     end
 
-#    get '/:utype/:name' do |t,n|
-#	utype = UnitType.where(:name => t).first
-#	if utype.nil?
-#	    erb :units
-#	else
-#	    nametype = UnitType.where(:name => "Name").first
-#	    hasname = AssociationType.where(:name => "Has Name").first
-#	    name = Unit.where(:unit_type => nametype, :value => n).first
-#	    assoc = Association.where(:association_type => hasname, :to => name).first
-#	    @unit = assoc.from
-#	    if @unit.nil?
-#		erb :units
-#	    else
-#		erb :unit
-#	    end
-#	end
-#    end
+    get '/unit/:id' do |id|
+	@unit = Unit.find(id)
+	if @unit.nil?
+	    erb :units
+	else
+	    erb :unit
+	end
+    end
 
 end

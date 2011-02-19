@@ -1,1 +1,9 @@
-<h1><%=@unit.unit_type.name %>: <%=@unit.name%></h1>
+<h1><%=@unit.value %></h1>
+<%
+@unit.from_associations.each do |assoc|
+    text = assoc.to.value.nil? ? "No Value" : assoc.to.value
+%>
+    <p><%=assoc.association_type.name%> <a href="/unit/<%=assoc.to.id%>"><%=text%></a></p>
+<%
+end
+%>

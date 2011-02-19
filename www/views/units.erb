@@ -12,8 +12,11 @@
 	<p>No <%=utype.name%> Units!</p>
 	<%  else%>
     <ul>
-		<%units.each do |unit|%>
-        <li><%=unit.value%></li>
+		<%
+		units.each do |unit|
+		text = unit.value.nil? ? "No Value" : unit.value
+		%>
+        <li><a href="/unit/<%=unit.id%>"><%=text%></a></li>
 		<%end%>
     </ul>
 	    <%
