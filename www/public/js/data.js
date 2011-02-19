@@ -6,8 +6,6 @@ fetch:function(type,name,callback,depth,force) {
     // depth is association recursion depth
     if(!depth) depth = 3;
     // Fetch the required unit
-    $.post("/json/"+type+"/"+name+"/"+depth,$.proxy(function(json) {
-    },this));
     $.ajax({
         url:"/json/"+type+"/"+name+"/"+depth,
         type:"POST",
