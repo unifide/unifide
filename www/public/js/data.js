@@ -179,6 +179,13 @@ names:function() {
     }
     return $.unique(list);
 },
+types:function() {
+    var list = [];
+    for(var u in this.data) {
+        list.push(this.data[u].type);
+    }
+    return $.unique(list);
+},
 units:function() {
     var list = [];
     for(var u in this.data) {
