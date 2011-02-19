@@ -7,12 +7,26 @@ fetch:function(type,name,callback,depth,force) {
     if(!depth) depth = 3;
     // Fetch the required unit
     $.post("/json/"+type+"/"+name+"/"+depth,$.proxy(function(json) {
-        if(json.error) {
-            console.error("Error fetching JSON: "+json.error);
-        } else {
-            callback(this._processJSON(json));
-        }
     },this));
+    $.ajax({
+        url:"/json/"+type+"/"+name+"/"+depth,
+        type:"POST",
+        context:this,
+        dataType:"json",
+        error:function(e, xhr) {
+            if(xhr == "parsererror")
+                console.error("Error parsing JSON");
+            else
+                console.error("Error fetching Data from server");
+        },
+        success:function(json) {
+            if(json.error) {
+                console.error("Error fetching JSON: "+json.error);
+            } else {
+                callback(this._processJSON(json));
+            }
+        }
+    });
 },
 get:function(type,name) {
     return this[type+"!"+name];
