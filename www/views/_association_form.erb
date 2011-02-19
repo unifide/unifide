@@ -1,0 +1,40 @@
+<form method="post" action="/association" id="association-form">
+    <%
+    if @unit.nil?
+    %>
+    <select name="from_id">
+    <%
+    Unit.all.each do |u|
+    %>
+	<option value="<%=u.id%>"><%=u.value%></option>
+    <%
+    end
+    %>
+    </select>
+    <%
+    else
+    %>
+    <input type="hidden" name="from_id" value="<%=@unit.id%>"/>
+    <%
+    end
+    %>
+    <select name="association_type_id">
+    <%
+    AssociationType.all.each do |u|
+    %>
+	<option value="<%=u.id%>"><%=u.name%></option>
+    <%
+    end
+    %>
+    </select>
+    <select name="to_id">
+    <%
+    Unit.all.each do |u|
+    %>
+	<option value="<%=u.id%>"><%=u.value%></option>
+    <%
+    end
+    %>
+    </select>
+    <button type="submit">Create Association</button>
+</form>

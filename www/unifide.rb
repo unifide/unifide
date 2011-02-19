@@ -32,4 +32,9 @@ class Unifide < Sinatra::Base
 	redirect '/units'
     end
 
+    post '/association' do
+	association = Association.create(params)
+	redirect "/unit/#{association.from.id}"
+    end
+
 end
