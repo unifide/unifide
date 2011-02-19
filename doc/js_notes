@@ -106,7 +106,7 @@ When a PackageContext creates a class, it creates a ClassContext. This context a
         "hasMethod":[4]
     }],
     ["Class","MyPackage.MyClass",{ // 2
-        "implements":[1],
+        "hasInterface":[1],
         "hasKeyword":[3,5],
         "hasMethod":[6]
     }],
@@ -114,7 +114,7 @@ When a PackageContext creates a class, it creates a ClassContext. This context a
     ["Method","MyPackage.SomeInterface.AMethod",{}], // 4
     ["Keyword","abstract",{}], // 5
     ["Method","MyPackage.MyClass.AMethod",{ // 6
-        "implements":[4]
+        "hasInterface":[4]
     }]
 ]
 

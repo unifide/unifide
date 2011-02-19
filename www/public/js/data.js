@@ -2,12 +2,12 @@ var DataRepository = Class.extend({
 init:function() {},
 fetch:function(type,name,callback,depth,force) {
     // return if we have it already, unless forcing
-    if(this[type+"!"+name] && !force);
+    if(this[type+"!"+name] && !force) return this[type+"!"+name];
     // depth is association recursion depth
     if(!depth) depth = 3;
     // Fetch the required unit
     $.ajax({
-        url:"/json/"+type+"/"+name+"/"+depth,
+        url:"/"+type+"/"+name+"/json",
         type:"POST",
         context:this,
         dataType:"json",

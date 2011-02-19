@@ -1,5 +1,5 @@
 class JSONReply
-    def JSONReply.reply(type,name,depth)
+    def JSONReply.reply(type,name)
         if type == "Package" and name == "MyPackage" then
             return <<-EOF
 [["Package","MyPackage",{"hasChild":[1,2],"hasGeometry":[7]}],
@@ -14,7 +14,7 @@ class JSONReply
 ["Geometry","20x20+60+10",{}]]
 EOF
         else
-            return '{"error":"No reply for '+type+'/'+name+' (depth:'+depth+')"}'
+            return '{"error":"No reply for '+type+'/'+name+'"}'
         end
     end
 end

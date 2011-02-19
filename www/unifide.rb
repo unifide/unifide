@@ -9,9 +9,9 @@ class Unifide < Sinatra::Base
         erb :index
     end
 
-    post '/json/:type/:name/:depth' do |type,name,depth|
+    post '/:type/:name/json' do |type,name|
         response.headers['Content-type'] = 'application/json'
-        JSONReply.reply(type,name,depth)
+        JSONReply.reply(type,name)
     end
 
     get '/units' do
