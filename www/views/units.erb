@@ -6,7 +6,7 @@
     <p>No Units!</p>
     <%else
 	UnitType.all.each do |utype|
-	    units = @units.where :unit_type_id => utype.id
+	    units = utype.units & @units
 	    if units.empty? == false
 	    %>
 	    <h3><%=utype.name%> Units</h3>
@@ -27,5 +27,4 @@
 	end
     end
     %>
-
 </div>
