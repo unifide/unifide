@@ -3,7 +3,13 @@
 @unit.from_associations.each do |assoc|
     text = assoc.to.value.nil? ? "No Value" : assoc.to.value
 %>
-    <p><%=assoc.association_type.name%> <a href="/unit/<%=assoc.to.id%>"><%=text%></a></p>
+    <p>has <%=assoc.association_type.name%> <a href="/unit/<%=assoc.to.id%>"><%=text%></a></p>
+<%
+end
+@unit.to_associations.each do |assoc|
+    text = assoc.from.value.nil? ? "No Value" : assoc.from.value
+%>
+    <p>is <%=assoc.association_type.name%> of <a href="/unit/<%=assoc.from.id%>"><%=text%></a></p>
 <%
 end
 %>
