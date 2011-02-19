@@ -17,7 +17,8 @@ else
     <input type="hidden" name="unit_type_id" value="<%=@unit_type.id%>"/>
 <%
 end
+    @value ||= "Value"
 %>
-    <input type="text" name="value"/>
+    <input type="text" name="value" value="<%=@value%>"/>
     <button type="submit">Create <%=@unit_type.nil? ? "Unit" : @unit_type.name%></button>
 </form>

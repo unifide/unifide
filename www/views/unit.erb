@@ -1,4 +1,4 @@
-<h1><%=@unit.value %></h1>
+<h1><%=@unit.value %> (<%=@unit.unit_type.name%>)</h1>
 <%
 @unit.from_associations.each do |assoc|
     text = assoc.to.value.nil? ? "No Value" : assoc.to.value
@@ -12,5 +12,11 @@ end
     <p>is <%=assoc.association_type.name%> of <a href="/unit/<%=assoc.from.id%>"><%=text%></a></p>
 <%
 end
+@tounit = @unit
+%>
+<%=erb :_association_form%>
+<%
+@tounit = nil
+@fromunit = @unit
 %>
 <%=erb :_association_form%>

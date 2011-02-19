@@ -1,24 +1,23 @@
 <div>
     <h2>All Units</h2>
-    <%if Unit.all.empty?%>
-    <p>No Units! You need to set up some defaults!</p>
+    <h3>Search</h3>
+    <%=erb :_unit_search_form%>
+    <%if @units.empty?%>
+    <p>No Units!</p>
     <%else
-	UnitType.all.each do |utype|%>
-    <h3><%=utype.name%> Units</h3>
-	<%
-	    units = utype.units
-	    if units.empty?
-	%>
-	<p>No <%=utype.name%> Units!</p>
-	<%  else%>
-    <ul>
+	UnitType.all.each do |utype|
+	    units = @units.where :unit_type_id => utype.id
+	    if units.empty? == false
+	    %>
+	    <h3><%=utype.name%> Units</h3>
+	    <ul>
 		<%
 		units.each do |unit|
 		text = unit.value.nil? ? "No Value" : unit.value
 		%>
-        <li><a href="/unit/<%=unit.id%>"><%=text%></a></li>
+		<li><a href="/unit/<%=unit.id%>"><%=text%></a></li>
 		<%end%>
-    </ul>
+	    </ul>
 	    <%
 	    end
 	    @unit_type = utype

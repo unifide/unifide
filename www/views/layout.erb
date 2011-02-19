@@ -24,4 +24,14 @@
 
 </head><body>
 <%= yield %>
+<%
+if @debug.nil? == false
+%>
+<div id="debug">
+<h4>Debug Output</h4>
+    <%=@debug.to_s%>
+</div>
+<%
+end
+%>
 </body></html>

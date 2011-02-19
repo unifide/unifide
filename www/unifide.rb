@@ -15,6 +15,7 @@ class Unifide < Sinatra::Base
     end
 
     get '/units' do
+	@units = Unit.all
         erb :units
     end
 
@@ -35,6 +36,20 @@ class Unifide < Sinatra::Base
     post '/association' do
 	association = Association.create(params)
 	redirect "/unit/#{association.from.id}"
+    end
+
+    get '/search' do
+	@units = Unit.where(:value => params[:name])
+	if(@units.size == 0)
+	    @value = params[:name]
+	    erb :_unit_form
+	else
+	    erb :units
+	end
+    end
+
+    get '/*' do
+	'These aren\'t the internets you\'re looking for, <a href="/">move along</a>.'
     end
 
 end

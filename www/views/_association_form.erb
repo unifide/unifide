@@ -1,6 +1,6 @@
 <form method="post" action="/association" id="association-form">
     <%
-    if @unit.nil?
+    if @fromunit.nil?
     %>
     <select name="from_id">
     <%
@@ -14,7 +14,8 @@
     <%
     else
     %>
-    <input type="hidden" name="from_id" value="<%=@unit.id%>"/>
+    <%=@fromunit.value%>
+    <input type="hidden" name="from_id" value="<%=@fromunit.id%>"/>
     <%
     end
     %>
@@ -22,19 +23,30 @@
     <%
     AssociationType.all.each do |u|
     %>
-	<option value="<%=u.id%>"><%=u.name%></option>
+	<option value="<%=u.id%>">has <%=u.name%></option>
     <%
     end
     %>
     </select>
-    <select name="to_id">
     <%
-    Unit.all.each do |u|
+    if @tounit.nil?
+    %>
+        <select name="to_id">
+    <%
+        Unit.all.each do |u|
     %>
 	<option value="<%=u.id%>"><%=u.value%></option>
     <%
-    end
+	end
     %>
     </select>
+    <%
+    else
+    %>
+    <%=@tounit.value%>
+    <input type="hidden" name="to_id" value="<%=@tounit.id%>"/>
+    <%
+    end
+    %>
     <button type="submit">Create Association</button>
 </form>
