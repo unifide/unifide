@@ -2,11 +2,17 @@
 <div id="topbar" class="border-bottom">
     <div id="settings"><a>Settings</a></div>
     <div id="settings-box" class="border opaque">
-        <div class="settings-item"><a id="theme-toggle">Toggle theme</a></div>
-        <div class="settings-item"><a href="units">Units!</a></div>
-        <div class="settings-item"><a href="register">Register</a></div>
+	<div class="settings-item"><a id="theme-toggle">Toggle theme</a></div>
+	<div class="settings-item"><a href="/units">Units!</a></div>
+	<%if !@current_user.nil?%>
+	<div class="settings-item"><a href="/logout">Log out</a></div>
+	<%end%>
+    </div>  
+    <div id="title"><a href="/">unif<span class="orange">ide</span></a> 
+    <%if !@current_user.nil?%>
+    - <a href="user/<%=@current_user.id%>"><%=@current_user.name%></a>
+    <%end%>
     </div>
-    <div id="title">unif<span class="orange">ide</span> - <a href="user/<%=@current_user.id%>"><%=@current_user.name%></a></div>
 </div>
 <div id="fullscreen" style="width:100%;position:absolute;top:21px;left:0px">
     <div id="editor" style="width:100%;height:100%;"></div>

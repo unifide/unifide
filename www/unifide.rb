@@ -14,11 +14,13 @@ class Unifide < Sinatra::Base
     end
 
     before do
-	if session[:user_id].nil? == false
-	    @current_user = user session[:user_id]
-	end
-	if @current_user.nil?
-	    request.path_info = '/welcome' unless request.path_info == '/login'
+	if request.path_info != '/login' and request.path_info != '/register'
+	    if session[:user_id].nil? == false
+		@current_user = user session[:user_id]
+	    end
+	    if @current_user.nil?
+		request.path_info = '/welcome'
+	    end
 	end
     end
 
@@ -111,6 +113,11 @@ class Unifide < Sinatra::Base
 	else
 	    redirect '/login', 303
 	end
+    end
+
+    get '/logout' do
+	session[:user_id] = nil
+	redirect '/welcome'
     end
 
     not_found do
