@@ -21,6 +21,7 @@ run: function() {
     this.project = new Project();
     this.actions = new ActionStack();
     this.data = new DataRepository();
+    this.processor = new CodeProcessor();
 
     this.canvas = new Canvas("canvas");
     this.editors = [];

@@ -159,7 +159,7 @@ data["Interface!MyPackage.SomeInterface"] = {
                 reverse:{...}
             }
         },
-        "implements":{
+        "hasInterface":{
             "Class!MyPackage.MyClass":{
                 type:"Class",
                 name:"MyPackage.MyClass",
@@ -185,6 +185,14 @@ app.data["Package!MyPackage"];
 
 Inner objects are references to other Units, meaning the structure is fully traversable.
 Reference loops occur so do not attempt exhaustive recursion.
+
+Also possible:
+
+app.data.get("Package","MyPackage").hasChild.each();
+returns {"Class!MyPackage.MyClass":{...},"Interface!MyPackage.SomeInterface":{...}}
+or to get just interfaces:
+app.data.get("Package","MyPackage").hasChild.each("Interface");
+returns {"Interface!MyPackage.SomeInterface":{...}}
 
 
 Saving:

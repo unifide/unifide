@@ -71,7 +71,7 @@ _processJSON:function(json) {
         var id = j[0]+"!"+j[1]; // Type!Name
 
         if(!this[id]) { // prepare object if it doesn't exist
-            this[id] = {type:j[0],name:j[1],assoc:{},reverse:{}};
+            this[id] = new Unit(j[0],j[1]);
         }
         map.push(this[id]);
     }
@@ -84,16 +84,13 @@ _processJSON:function(json) {
         
         for(var a in j[2]) { // a = association name
             var acc = j[2][a]; // acc = association target array
-            if(!u.assoc[a]) { // prep for data
-                u.assoc[a] = {};
-            }
             for(var t=0;t<acc.length;t++) {
                 var at = map[acc[t]]; // association target
-                u.assoc[a][at.type+"!"+at.name] = at;
-                if(!at.reverse[a]) { // prep reverse
+                u.addAssociation(a,at);
+/*                if(!at.reverse[a]) { // prep reverse
                     at.reverse[a] = {};
                 }
-                at.reverse[a][u.type+"!"+u.name] = u;
+                at.reverse[a][u.type+"!"+u.name] = u;*/
             }
         }
     }
@@ -112,6 +109,97 @@ _updateDepth:function(unit, depth) {
         for(var o in unit.assoc[a]) {
             var next = unit.assoc[a][o];
             this._updateDepth(next,depth-1);
+        }
+    }
+}
+});
+
+var Unit = Class.extend({
+init:function(type,name) {
+    this.type = type;
+    this.name = name;
+},
+addAssociation:function(assoc_type,target) {
+    var hasType = "has"+assoc_type;
+    if(!this[hasType]) {
+        this[hasType] = new Association(hasType);
+    }
+    this[hasType].add(target);
+
+    var isType = "is"+assoc_type+"Of";
+    if(!target[isType]) {
+        target[isType] = new Association(isType);
+    }
+    target[isType].add(this);
+},
+remove:function() {
+}
+});
+
+var Association = Class.extend({
+init:function(type) {
+    this.type = type;
+    this.data = {};
+},
+add:function(unit) {
+    this.data[unit.type+"!"+unit.name] = unit;
+},
+each:function(type) {
+    var output = new AssociationSet();
+    for(var u in this.data) {
+        var unit = this.data[u];
+        if(!type || type == unit.type) {
+            output.add(unit);
+        }
+    }
+    return output;
+},
+get:function(type,name) {
+    if(type && name) {
+        // return directly if type and name defined
+        return this.data[type+"!"+name];
+    } else if(type) {
+        // return first of type if type declared
+        for(var u in this.data) {
+            if(this.data[u].type == type) {
+                return this.data[u];
+            }
+        }
+    } else {
+        // return first item if nothing declared
+        for(var u in this.data) {
+            return this.data[u];
+        }
+    }
+},
+names:function() {
+    var list = [];
+    for(var u in this.data) {
+        list.push(this.data[u].name);
+    }
+    return $.unique(list);
+},
+units:function() {
+    var list = [];
+    for(var u in this.data) {
+        list.push(this.data[u]);
+    }
+    return $.unique(list);
+}
+});
+
+var AssociationSet = Class.extend({
+init:function() {},
+add:function(unit) {
+    for(var type in unit) {
+        if(type.match(/^has.*/) || type.match(/^is.*Of$/)) {
+            if(!this[type]) {
+                this[type] = new Association(type);
+            }
+            for(var subId in unit[type].data) {
+                var subUnit = unit[type].data[subId];
+                this[type].add(subUnit);
+            }
         }
     }
 }
