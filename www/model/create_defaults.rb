@@ -1,7 +1,16 @@
 require 'model'
 
-def makeATUT(from, at, to, min, max)
-    AssociationTypeUnitType.create(:from_unit_type => from, :association_type => at, :to_unit_type => to, :min => min, :max => max)
+Unit.delete_all
+UnitType.delete_all
+Association.delete_all
+AssociationType.delete_all
+
+def makeAssocType(type)
+    AssociationType.create(:name => type)
+end
+
+def makeUnitType(type)
+    UnitType.create(:name => type)
 end
 
 def makeAssoc(from, type, to)
@@ -13,28 +22,23 @@ def makeUnit(type, name)
     return unit
 end
 
-Unit.delete_all
-UnitType.delete_all
-Association.delete_all
-AssociationType.delete_all
-AssociationTypeUnitType.delete_all
+packageType = makeUnitType("Package")
+tableType = makeUnitType("Table")
+actorType = makeUnitType("Actor")
+objectType = makeUnitType("Object")
+classType = makeUnitType("Class")
+methodType = makeUnitType("Method")
+attributeType = makeUnitType("Attribute")
+visibilityType = makeUnitType("Visibility")
+geometryType = makeUnitType("Geometry")
+keywordType = makeUnitType("Keyword")
+templateParameter = makeUnitType("TemplateParameter")
 
-packageType = UnitType.create(:name=>"Package")
-classType = UnitType.create(:name=>"Class")
-methodType = UnitType.create(:name=>"Method")
-attributeType = UnitType.create(:name=>"Attribute")
-visibilityType = UnitType.create(:name=>"Visibility")
-booleanType = UnitType.create(:name=>"Boolean")
-
-hasname = AssociationType.create(:name=>"hasName")
-extends = AssociationType.create(:name=>"hasSuperclass")
-hasowner = AssociationType.create(:name=>"hasOwner")
-
-makeATUT classType, extends, classType, 0, 1
-makeATUT classType, hasowner, packageType, 1, 1
-makeATUT classType, hasowner, classType, 0, 1
-makeATUT methodType, hasowner, classType, 1, 1
-makeATUT packageType, hasowner, packageType, 0, 1
+extends = makeAssocType("Superclass")
+hasowner = makeAssocType("Owner")
+hasgeo = makeAssocType("Geometry")
+haskeyword = makeAssocType("Keyword")
+hasTemplateParam = makeAssocType("TemplateParameter")
 
 pub = makeUnit(visibilityType, "Public")
 prot = makeUnit(visibilityType, "Protected")
@@ -45,6 +49,9 @@ javalangpack = makeUnit(packageType, "lang")
 
 obj = makeUnit classType, "Object"
 str = makeUnit classType, "String"
+lst = makeUnit classType, "List"
+
+t = makeUnit templateParameter, "T"
 
 tostr = makeUnit methodType, "toString"
 
@@ -53,3 +60,5 @@ makeAssoc str, hasowner, javalangpack
 makeAssoc obj, hasowner, javalangpack
 makeAssoc javalangpack, hasowner, javapack
 makeAssoc tostr, hasowner, obj
+makeAssoc t, extends, obj
+makeAssoc lst, hasTemplateParam, t
