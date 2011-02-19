@@ -4,18 +4,20 @@ fetch:function(type,name,callback,depth,force) {
     // return if we have it already, unless forcing
     if(this[type+"!"+name] && !force) return this[type+"!"+name];
     // depth is association recursion depth
-    if(!depth) depth = 3;
+    if(!depth) depth = 0;
     // Fetch the required unit
     $.ajax({
         url:"/"+type+"/"+name+"/json",
         type:"POST",
         context:this,
         dataType:"json",
+        data:{depth:depth},
         error:function(e, xhr) {
-            if(xhr == "parsererror")
+            if(xhr == "parsererror") {
                 console.error("Error parsing JSON");
-            else
+            } else {
                 console.error("Error fetching Data from server");
+            }
         },
         success:function(json) {
             if(json.error) {
@@ -41,24 +43,31 @@ remove:function(type,name) {
         for(var o in u.assoc[a]) {
             var rev = u.assoc[a][o].reverse;
             delete rev[a][id];
-            if(isEmpty(rev[a]))
+            if(isEmpty(rev[a])) {
                 delete rev[a];
+                // handle autosave
+            }
         }
     }
     for(var a in u.reverse) {
         for(var o in u.reverse[a]) {
             var as = u.reverse[a][o].assoc;
             delete as[a][id];
-            if(isEmpty(as[a]))
+            if(isEmpty(as[a])) {
                 delete as[a];
+                // handle autosave
+            }
         }
     }
     delete this[id];
+    // handle autosave
 },
 _processJSON:function(json) {
     var map = []; // maps json index to final object
-    for(var i=0;i<json.length;i++) {
-        var j = json[i];
+
+    // write units to memory
+    for(var i=0;i<json.data.length;i++) {
+        var j = json.data[i];
         var id = j[0]+"!"+j[1]; // Type!Name
 
         if(!this[id]) { // prepare object if it doesn't exist
@@ -66,8 +75,10 @@ _processJSON:function(json) {
         }
         map.push(this[id]);
     }
-    for(var i=0;i<json.length;i++) {
-        var j = json[i];
+
+    // apply associations
+    for(var i=0;i<json.data.length;i++) {
+        var j = json.data[i];
         var id = j[0]+"!"+j[1];
         var u = this[id];
         
@@ -86,6 +97,22 @@ _processJSON:function(json) {
             }
         }
     }
-    return map[0]; // return the requested unit
+
+    // update depths
+    var root = this[json.type+"!"+json.name];
+    this._updateDepth(root,json.depth);
+
+    return root; // return the requested unit
+},
+_updateDepth:function(unit, depth) {
+    if(depth < 0 || unit.depth >= depth) return;
+
+    unit.depth = depth;
+    for(var a in unit.assoc) {
+        for(var o in unit.assoc[a]) {
+            var next = unit.assoc[a][o];
+            this._updateDepth(next,depth-1);
+        }
+    }
 }
 });

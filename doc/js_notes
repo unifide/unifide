@@ -97,27 +97,19 @@ PackageContexts continue this process recursively.
 When a PackageContext creates a class, it creates a ClassContext. This context also sends data to the project's DataProcessor, but this time it needs more specialised functionality. The RubyProcessor will output class names with the correct inheritance format, and use the correct method signatures for ruby. The visual side of things will still be handled by ClassContext.
 
 [1] JSON example for the root PackageContext for MyApp:
-[
-    ["Package","MyPackage",{ // 0
-        "hasChild":[1,2]
-    }],
-    ["Interface","MyPackage.SomeInterface",{ // 1
-        "hasKeyword":[3],
-        "hasMethod":[4]
-    }],
-    ["Class","MyPackage.MyClass",{ // 2
-        "hasInterface":[1],
-        "hasKeyword":[3,5],
-        "hasMethod":[6]
-    }],
-    ["Keyword","public",{}], // 3
-    ["Method","MyPackage.SomeInterface.AMethod",{}], // 4
-    ["Keyword","abstract",{}], // 5
-    ["Method","MyPackage.MyClass.AMethod",{ // 6
-        "hasInterface":[4]
-    }]
-]
+{"type":"Package","name":"MyPackage","depth":3,"data":[
+    ["Package","MyPackage",{"hasChild":[1,2],"hasGeometry":[7]}],
+    ["Interface","MyPackage.SomeInterface",{"hasKeyword":[3],"hasMethod":[4],"hasGeometry":[8]}],
+    ["Class","MyPackage.MyClass",{"hasInterface":[1],"hasKeyword":[3,5],"hasMethod":[6],"hasGeometry":[9]}],
+    ["Keyword","public",{}],
+    ["Method","MyPackage.SomeInterface.AMethod",{}],
+    ["Keyword","abstract",{}],
+    ["Method","MyPackage.MyClass.AMethod",{"hasInterface":[4]}],
+    ["Geometry","100x80+0+0",{}],
+    ["Geometry","20x20+20+10",{}],
+    ["Geometry","20x20+60+10",{}]
 
+depth is the maximum number of levels returned - in this case, the package, its classes and interfaces, and the first level of associations inside the classes and interfaces.
 integers represent the indices in the output JSON array
 
 Package("MyPackage") hasChild Interface("MyPackage.SomeInterface")
@@ -136,11 +128,13 @@ Once the above data has been parsed, it creates a similar structure, but with in
 data["Interface!MyPackage.SomeInterface"] = {
     type:"Interface",
     name:"MyPackge.SomeInterface",
+    depth:2,
     assoc:{
         "hasKeyword":{
             "Keyword!Public":{
                 type:"Keyword",
                 name:"Public",
+                depth:1,
                 assoc:{...},
                 reverse:{...}
             }
@@ -149,6 +143,7 @@ data["Interface!MyPackage.SomeInterface"] = {
             "Method!MyPackage.SomeInterface.AMethod":{
                 type:"Method",
                 name:"MyPackage.SomeInterface.AMethod",
+                depth:1,
                 assoc:{...},
                 reverse:{...}
             }
@@ -159,6 +154,7 @@ data["Interface!MyPackage.SomeInterface"] = {
             "Package!MyPackage":{
                 type:"Package",
                 name:"MyPackage",
+                depth:3,
                 assoc:{...},
                 reverse:{...}
             }
@@ -167,12 +163,14 @@ data["Interface!MyPackage.SomeInterface"] = {
             "Class!MyPackage.MyClass":{
                 type:"Class",
                 name:"MyPackage.MyClass",
+                depth:2,
                 assoc:{...},
                 reverse:{...}
             }
         }
     }
 }
+The depth value stores the minimum number of levels down data has been fully loaded.
 
 The data is accessed like so:
 app.data.get("Package","MyPackage")
