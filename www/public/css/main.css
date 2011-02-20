@@ -21,20 +21,28 @@ a:hover {
     float:left;
     margin:2px;
 }
-#settings {
+#settings, #user-settings {
     float:right;
     margin:4px;
     margin-right:8px;
 }
-#settings-box {
+#settings-box, #user-settings-box, #user-login-box {
     position:absolute;
-    right:0px;
     top:20px;
     z-index:99;
     display:none;
 }
+#settings-box {
+    right:40px;
+}
+#user-settings-box, #user-login-box {
+    right:0px;
+}
 .settings-item {
     padding:3px;
+}
+input#password-input, input#email-input {
+    width:90px;
 }
 
 div.contextDiv {

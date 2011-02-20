@@ -23,10 +23,8 @@ class Unifide < Sinatra::Base
     end
 
     before do
-	if request.path_info != '/login' and request.path_info != '/register'
-	    if session[:user_id].nil? == false
-		@current_user = user session[:user_id]
-	    end
+	if session[:user_id].nil? == false
+	    @current_user = user session[:user_id]
 	end
     end
 
@@ -121,23 +119,21 @@ class Unifide < Sinatra::Base
 	end
     end
 
-    get '/login' do
-	erb :_login_form
-    end
-
     post '/login' do
 	u = User.where(:email => params[:email]).first
+	response = {:success => false}
 	if !u.nil? and u.password == params[:password]
 	    session[:user_id] = u.id
-	    redirect '/', 303
-	else
-	    redirect '/login', 303
+	    response[:success] = true
+	    response[:name] = u.name
+	    response[:email] = u.email
 	end
+	response.to_json
     end
 
-    get '/logout' do
+    post '/logout' do
 	session[:user_id] = nil
-	redirect '/welcome'
+	{:success => true}.to_json
     end
 
     get '/projects/?' do
