@@ -26,14 +26,12 @@ def makeAssoc(from, type, to)
 end
 
 def makeUnit(type, name)
-    unit = Unit.create(:unit_type => type, :value => name)
+    unit = Unit.create(:unit_type => type, :value => name, :project => Project.where(:name => "Default").first)
     return unit
 end
 
 admin = User.create(:first_name => "Uni", :second_name => "Fide", :email => "admin@unifide.com", :password => "admin", :join_date => DateTime.now)
-
 defaultProject = Project.create(:name => "Default", :public => true)
-
 ProjectUser.create(:project => defaultProject, :user => admin, :admin => true)
 
 packageType = makeUnitType("Package")
