@@ -3,13 +3,13 @@
 @unit.from_associations.each do |assoc|
     text = assoc.to.value.nil? ? "No Value" : assoc.to.value
 %>
-    <p>has <%=assoc.association_type.name%> <a href="/unit/<%=assoc.to.id%>"><%=text%></a></p>
+    <p>has <%=assoc.association_type.name%> <%=link_to_unit assoc.to, text%></p>
 <%
 end
 @unit.to_associations.each do |assoc|
     text = assoc.from.value.nil? ? "No Value" : assoc.from.value
 %>
-    <p>is <%=assoc.association_type.name%> of <a href="/unit/<%=assoc.from.id%>"><%=text%></a></p>
+    <p>is <%=assoc.association_type.name%> of <%=link_to_unit assoc.from, text%></p>
 <%
 end
 @tounit = @unit
@@ -20,3 +20,14 @@ end
 @fromunit = @unit
 %>
 <%=erb :_association_form%>
+<h2>Text Units</h2>
+<%
+@unit.text_units.each do |tu|
+    @textunit = tu
+%>
+    <%=erb :_text_unit_form%>
+<%
+end
+@textunit = nil
+%>
+<%=erb :_text_unit_form%>

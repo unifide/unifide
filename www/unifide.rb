@@ -17,6 +17,9 @@ class Unifide < Sinatra::Base
 		nil
 	    end
 	end
+	def link_to_unit(unit, text)
+	    "<a href=\"/projects/#{unit.project.name}/units/#{unit.unit_type.name}/#{unit.value}\">#{text}</a>"
+	end
     end
 
     before do
@@ -24,8 +27,19 @@ class Unifide < Sinatra::Base
 	    if session[:user_id].nil? == false
 		@current_user = user session[:user_id]
 	    end
-	    if @current_user.nil?
-		request.path_info = '/welcome'
+	end
+    end
+
+    before '/projects/:project/?*' do |project|
+	@project = Project.where(:name => project).first
+	if @project.nil?
+	    request.path_info = '/projects'
+	else
+	    if !@project.public?
+		# Project is not public and user is not logged in
+		request.path_info = '/welcome' if @current_user.nil?
+		# Project is not public and logged in user is not a member
+		request.path_info = '/projects' if UserProject.where(:user => @current_user, :project => @project).size == 0
 	    end
 	end
     end
@@ -124,6 +138,33 @@ class Unifide < Sinatra::Base
     get '/logout' do
 	session[:user_id] = nil
 	redirect '/welcome'
+    end
+
+    get '/projects/?' do
+	@projects = Project.where(:public => true)
+	if !@current_user.nil?
+	    @projects = @projects & @current_user.user_projects.collect {|pu| pu.project}
+	end
+	erb :projects
+    end
+
+    get '/projects/:project/?' do
+	erb :project
+    end
+
+    get '/projects/:project/units/?' do |project|
+	@units = Unit.where(:project => Project.where(:name => project).first).first
+	erb :units
+    end
+
+    get '/projects/:project/units/:unittype/:name' do |project, unittype, name|
+	type = UnitType.where(:name => unittype).first
+	@unit = Unit.where(:project_id => @project.id, :unit_type_id => type.id, :value => name).first unless type.nil?
+	if @unit.nil?
+	    redirect "/#{project}"
+	else
+	    erb :unit
+	end
     end
 
     not_found do

@@ -47,6 +47,9 @@ geometryType = makeUnitType("Geometry")
 keywordType = makeUnitType("Keyword")
 templateParameter = makeUnitType("TemplateParameter")
 
+code = makeTextUnitType("Code")
+docs = makeTextUnitType("Documentation")
+
 extends = makeAssocType("Superclass")
 hasowner = makeAssocType("Owner")
 hasgeo = makeAssocType("Geometry")
