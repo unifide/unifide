@@ -1,9 +1,13 @@
 require 'model'
 
+User.delete_all
+Project.delete_all
 Unit.delete_all
 UnitType.delete_all
 Association.delete_all
 AssociationType.delete_all
+TextUnit.delete_all
+TextUnitType.delete_all
 
 def makeAssocType(type)
     AssociationType.create(:name => type)
@@ -11,6 +15,10 @@ end
 
 def makeUnitType(type)
     UnitType.create(:name => type)
+end
+
+def makeTextUnitType(type)
+    TextUnitType.create(:name => type)
 end
 
 def makeAssoc(from, type, to)
@@ -21,6 +29,12 @@ def makeUnit(type, name)
     unit = Unit.create(:unit_type => type, :value => name)
     return unit
 end
+
+admin = User.create(:first_name => "Uni", :second_name => "Fide", :email => "admin@unifide.com", :password => "admin", :join_date => DateTime.now)
+
+defaultProject = Project.create(:name => "Default", :public => true)
+
+ProjectUser.create(:project => defaultProject, :user => admin, :admin => true)
 
 packageType = makeUnitType("Package")
 tableType = makeUnitType("Table")

@@ -10,7 +10,13 @@ class Unifide < Sinatra::Base
 
     helpers do
 	attr_reader :current_user
-	def user(id) User.find(id) end
+	def user(id) 
+	    begin
+		User.find(id)
+	    rescue ActiveRecord::RecordNotFound
+		nil
+	    end
+	end
     end
 
     before do
@@ -84,7 +90,7 @@ class Unifide < Sinatra::Base
     end
 
     get '/user/:id' do |id|
-	@user = User.find(id)
+	@user = user id
 	if @user.nil?
 	    redirect '/register'
 	else
@@ -107,7 +113,7 @@ class Unifide < Sinatra::Base
 
     post '/login' do
 	u = User.where(:email => params[:email]).first
-	if u.password == params[:password]
+	if !u.nil? and u.password == params[:password]
 	    session[:user_id] = u.id
 	    redirect '/', 303
 	else

@@ -5,3 +5,27 @@
     <li>Second Name: <%=@user.second_name%></li>
     <li>Email Address: <%=@user.email%></li>
 </ul>
+
+<div id="project-list">
+<h2>Projects</h2>
+<%
+projects = @user.user_projects.collect {|up| up.project}
+if projects.size == 0
+%>
+    <p>You have no projects!</p>
+<%
+else
+%>
+    <ul>
+    <%
+    projects.each do |p|
+    %>
+	<li><a href="/project/<%=p.id%>"><%=p.name%></a></li>
+    <%
+    end
+    %>
+    </ul>
+<%
+end
+%>
+</div>
