@@ -15,6 +15,17 @@
 <script type="text/javascript" src="/js/context/context.js"></script>
 <script type="text/javascript" src="/js/context/package.js"></script>
 <script type="text/javascript" src="/js/context/class.js"></script>
+<%
+if @debug.nil? == false
+%>
+<script type="text/javascript">
+console.log(
+'<%=@debug.to_s.gsub("\n","\\n\\\n").gsub("'","\\\\'")%>'
+);
+</script>
+<%
+end
+%>
 
 <link rel="stylesheet" type="text/css" href="/css/main.css"/>
 <link title="dark" class="theme" rel="stylesheet" type="text/css"
@@ -24,14 +35,4 @@
 
 </head><body>
 <%= yield %>
-<%
-if @debug.nil? == false
-%>
-<div id="debug">
-<h4>Debug Output</h4>
-    <%=@debug.to_s%>
-</div>
-<%
-end
-%>
 </body></html>
