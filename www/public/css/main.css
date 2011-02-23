@@ -21,12 +21,12 @@ a:hover {
     float:left;
     margin:2px;
 }
-#settings, #user-settings {
+#settings, #user-settings, #registration-menu-item {
     float:right;
     margin:4px;
     margin-right:8px;
 }
-#settings-box, #user-settings-box, #user-login-box {
+#settings-box, #user-settings-box, #user-login-box{
     position:absolute;
     top:20px;
     z-index:99;
@@ -41,8 +41,17 @@ a:hover {
 .settings-item {
     padding:3px;
 }
-input#password-input, input#email-input {
-    width:90px;
+#user-login-box input {
+    width:100px;
+    z-index:99;
+}
+#registration-box label {
+    float:left;
+    clear:both;
+    width:70px;
+}
+#registration-box input {
+    float:left;
 }
 
 div.contextDiv {

@@ -85,20 +85,16 @@ class Unifide < Sinatra::Base
 	end
     end
 
-    get '/register' do
-	erb :_registration_form
-    end
-
     post '/register' do
+	response ||= {:success => false}
 	params[:join_date] = DateTime.now
 	@user = User.new(params)
-	if @user.save.nil?
-	    erb :register
-	else
+	if !@user.save.nil?
+	    response[:success] = true
+	    response[:name] = @user.name
 	    session[:user_id] = @user.id
-	    @current_user = @user
-	    redirect "/user/#{@user.id}"
 	end
+	response.to_json
     end
 
     get '/user/:id' do |id|
@@ -107,15 +103,6 @@ class Unifide < Sinatra::Base
 	    redirect '/register'
 	else
 	    erb :user
-	end
-    end
-
-    get '/welcome' do
-	#Logged in users have no need of a welcome page
-	if @current_user.nil?
-	    erb :welcome
-	else
-	    redirect '/'
 	end
     end
 
