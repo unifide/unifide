@@ -117,6 +117,7 @@ class Unifide < Sinatra::Base
 	    response[:name] = u.name
 	    response[:email] = u.email
 	end
+	response['Content-type'] = "application/json"
 	response.to_json
     end
 
@@ -125,12 +126,15 @@ class Unifide < Sinatra::Base
 	{:success => true}.to_json
     end
 
-    get '/projects/?' do
+    post '/projects/?' do
 	@projects = Project.where(:public => true)
+	response = {}
 	if !@current_user.nil?
-	    @projects = @projects & @current_user.user_projects.collect {|pu| pu.project}
+	    response[:user] = @current_user.user_projects.collect {|pu| {:name => pu.project.name, :public => pu.project.public, :admin => pu.admin}}
+	    @projects = @projects - @current_user.user_projects.collect {|pu| pu.project}
 	end
-	erb :projects
+	response[:public] = @projects.collect {|p| {:name => p.name, :public => p.public}}
+	response.to_json
     end
 
     get '/projects/:project/?' do

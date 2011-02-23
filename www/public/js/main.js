@@ -55,6 +55,8 @@ run: function() {
 	}
         
         $("button").button();
+
+	this.updateProjects();
     },this));
 },
 
@@ -107,6 +109,7 @@ login: function() {
 		var userMenu = $("#user-settings a");
 		userMenu.html(json.name);
 		$("#registration-menu-item").hide();
+		app.updateProjects();
 	    }
 	    else
 		alert("Incorrect E-mail/Password");
@@ -120,11 +123,14 @@ logout: function() {
 	url: "/logout",
 	type:"POST",
 	context:this,
+	success:function() {
+	    app.updateProjects();
+	    $("#user-settings").attr("data-user", "");
+	    $("#user-settings a").html("Login")
+	    $("#user-settings-box").slideUp("fast");
+	    $("#registration-menu-item").show();
+	}
     });
-    $("#user-settings").attr("data-user", "");
-    $("#user-settings a").html("Login")
-    $("#user-settings-box").slideUp("fast");
-    $("#registration-menu-item").show();
 },
 
 register: function() {
@@ -148,8 +154,18 @@ register: function() {
 	    }
 	}
     });
+},
+
+updateProjects: function() {
+    $.ajax({
+	url:"/projects",
+	type:"POST",
+	context:this,
+	dataType:"json",
+	success:function(json) {
+	    this.projects = json;
+	}
+    });
 }
-
-
 
 });
