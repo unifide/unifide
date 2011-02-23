@@ -93,8 +93,8 @@ showUserControls: function() {
 },
 
 login: function() {
-    var email = $("#email-input").val();
-    var password = $("#password-input").val();
+    var email = $("#login-email").val();
+    var password = $("#login-password").val();
     $.ajax({
 	url: "/login",
 	type:"POST",
