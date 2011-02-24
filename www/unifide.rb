@@ -110,15 +110,16 @@ class Unifide < Sinatra::Base
 
     post '/login' do
 	u = User.where(:email => params[:email]).first
-	response = {:success => false}
+	json ||= {}
+	json[:success] = false
 	if !u.nil? and u.password == params[:password]
 	    session[:user_id] = u.id
-	    response[:success] = true
-	    response[:name] = u.name
-	    response[:email] = u.email
+	    json[:success] = true
+	    json[:name] = u.name
+	    json[:email] = u.email
 	end
 	response['Content-type'] = "application/json"
-	response.to_json
+	json.to_json
     end
 
     post '/logout' do
@@ -128,22 +129,27 @@ class Unifide < Sinatra::Base
 
     post '/projects/?' do
 	@projects = Project.where(:public => true)
-	response = {}
+	json ||= {}
 	if !@current_user.nil?
-	    response[:user] = @current_user.user_projects.collect {|pu| {:name => pu.project.name, :public => pu.project.public, :admin => pu.admin}}
+	    json[:user] = @current_user.user_projects.collect {|pu| {:name => pu.project.name, :public => pu.project.public, :admin => pu.admin}}
 	    @projects = @projects - @current_user.user_projects.collect {|pu| pu.project}
 	end
-	response[:public] = @projects.collect {|p| {:name => p.name, :public => p.public}}
-	response.to_json
+	json[:public] = @projects.collect {|p| {:name => p.name, :public => p.public}}
+	json[:success] = true
+	json.to_json
     end
 
     get '/projects/:project/?' do
 	erb :project
     end
 
-    get '/projects/:project/units/?' do |project|
-	@units = Unit.where(:project => Project.where(:name => project).first).first
-	erb :units
+    post '/projects/:project/units/?' do |project|
+	response.headers["Content-type"] = "json"
+	units = Unit.where(:project_id => Project.where(:name => project).first.id)
+	json ||= {}
+	json[:units] = units.collect {|unit| {:name => unit.value, :type => unit.unit_type.name, :project => unit.project.name}}
+	json[:success] = true
+	json.to_json
     end
 
     get '/projects/:project/units/:unittype/:name' do |project, unittype, name|
