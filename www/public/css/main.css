@@ -21,7 +21,7 @@ a:hover {
     float:left;
     margin:2px;
 }
-#settings, #user-settings, #registration-menu-item {
+#settings, #user-settings, #registration-menu-item, #project-menu-item {
     float:right;
     margin:4px;
     margin-right:8px;
@@ -52,6 +52,24 @@ a:hover {
 }
 #registration-box input {
     float:left;
+}
+#toolbox {
+    position:fixed;
+    float:left;
+    height:100%;
+    width:150px;
+}
+.tool {
+    width:85%;
+    margin:3px;
+    padding:5px;
+    height:30px;
+    z-index:99;
+}
+.ui-draggable-dragging {
+    z-index:100;
+    background-color:orange;
+    color:black;
 }
 
 div.contextDiv {

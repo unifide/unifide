@@ -55,6 +55,7 @@ run: function() {
 	}
         
         $("button").button();
+	$(".tool").draggable({revert:true,containment:$("#editor"),opacity:0.5,cursor:"hand"}).addClass("ui-corner-all");
 
 	this.updateProjects();
     },this));
