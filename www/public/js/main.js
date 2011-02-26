@@ -3,10 +3,8 @@ app = null;
 
 // Start our app once it's all loaded.
 $(window).load(function() {
-    if($("#canvas").length){
-        app = new Unifide();
-        app.run();
-    }
+    app = new Unifide();
+    app.run();
 });
 
 
@@ -18,13 +16,12 @@ init: function() {
 
 run: function() {
     this.loader = new Loader();
-    this.topbar = new TopBar();
+    this.window = new Window();
     this.project = new Project();
     this.actions = new ActionStack();
     this.data = new DataRepository();
     this.processor = new CodeProcessor();
 
-    this.canvas = new Canvas("canvas");
     this.editors = [];
     this.editors.push(new Editor($("#editor")));
 
@@ -51,10 +48,8 @@ toggleTheme: function() {
 
 resize: function() {
     $("#fullscreen").height($(window).height() - $("#topbar").height() - 1)
-    this.canvas.resize();
     for(var e=0;e<this.editors.length;e++) {
         this.editors[e].resize();
-        this.editors[e].draw();
     }
 },
 });

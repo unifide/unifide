@@ -1,5 +1,15 @@
-var TopBar = Class.extend({
+var Window = Class.extend({
 init: function() {
+    $('body').layout({
+        north:{
+            size:20,
+            closable:false,
+            resizable:false,
+            spacing_open:0
+        }
+    });
+
+
     $("#settings a").click(function() { $("#settings-box").slideToggle("fast"); });
     $("#user-settings a").click(this.showUserControls);
     $("#registration-menu-item a").click(function() {$("#registration-box").dialog("open")});

@@ -14,14 +14,6 @@ destroy: function() {
         this.root.destroy();
 },
 
-draw: function() {
-    app.canvas.ctx.save();
-    app.canvas.ctx.translate(this.left,this.top);
-    if(this.root)
-        this.root.draw();
-    app.canvas.ctx.restore();
-},
-
 resize: function() {
     this.top = this.parent.offset().top;
     this.left = this.parent.offset().left;
