@@ -38,8 +38,8 @@ login: function() {
     var username = $("#login-username").val();
     var password = $("#login-password").val();
     $.ajax({
-	url: "/login",
-	type:"POST",
+	url: "/currentuser",
+	type:"PUT",
 	dataType:"json",
 	data:{username:username,password:password},
 	success:function(json) {
@@ -59,8 +59,8 @@ login: function() {
 
 logout: function() {
     $.ajax({
-	url: "/logout",
-	type:"POST",
+	url: "/currentuser",
+	type:"DELETE",
 	success:function() {
 	    app.updateProjects();
 	    $("#user-settings").attr("data-user", "");
@@ -79,7 +79,7 @@ register: function() {
     var password = $("#reg-password").val();
     var confirmPassword = $("#reg-password-confirm").val();
     $.ajax({
-	url:"/register",
+	url:"/users/" + username,
 	type:"POST",
 	context:this,
 	dataType:"json",

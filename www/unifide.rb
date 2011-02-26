@@ -26,9 +26,6 @@ class Unifide < Sinatra::Base
 	if session[:user_id].nil? == false
 	    @current_user = user session[:user_id]
 	end
-	if request.path_info != '/login' && request.path_info != '/register' and @current_user.nil? and (request.put? or request.post? or request.delete?)
-	    request.path_info = '/no'
-	end
     end
 
     before '/projects/:project/?*' do |project|
@@ -56,22 +53,19 @@ class Unifide < Sinatra::Base
         JSONReply.reply(type,name)
     end
 
-    post '/register' do
-	json ||= {:success => false}
-	params[:join_date] = DateTime.now
-	@user = User.new(params)
-	if !@user.save.nil?
-	    session[:user_id] = @user.id
-	    
-	    json[:success] = true
-	    json[:name] = @user.name
-	    json[:email] = @user.email
+    get '/currentuser/?' do
+	json ||= {}
+	if @current_user.nil?
+	    json[:guest] = true
+	else
+	    json[:guest] = false
+	    json[:username] = @current_user.username
 	end
 	response['Content-type'] = "application/json"
 	json.to_json
     end
 
-    post '/login' do
+    put '/currentuser/?' do
 	u = User.where(:username => params[:username]).first
 	json ||= {}
 	json[:success] = false
@@ -87,13 +81,62 @@ class Unifide < Sinatra::Base
 	json.to_json
     end
 
-    put '/projects/:project' do |project|
-	
+    delete '/currentuser/?' do
+	session[:user_id] = nil
+	response['Content-type'] = "application/json"
+	{:success => true}.to_json
     end
 
-    post '/logout' do
-	session[:user_id] = nil
-	{:success => true}.to_json
+    get '/users/?' do
+	json ||= {}
+	json[:users] = User.all.collect {|user| {:username => user.username}}
+	response['Content-type'] = "application/json"
+	json.to_json
+    end
+
+    put '/users/:username/?' do |username|
+	json ||= {:success => false}
+	params[:join_date] = DateTime.now
+	params[:username] = username
+	@user = User.new(params)
+	if !@user.save.nil?
+	    session[:user_id] = @user.id
+	    
+	    json[:success] = true
+	    json[:name] = @user.name
+	    json[:email] = @user.email
+	end
+	response['Content-type'] = "application/json"
+	json.to_json
+    end
+
+    post '/users/:username/?' do |username|
+	response['Content-type'] = "application/json"
+	{:success => false}.to_json
+    end
+
+    get '/users/:username/?' do |username|
+	json ||= {:success => false}
+	user = User.where(:username => username).first
+	if !user.nil?
+	    json[:success] = true
+	    json[:username] = user.username
+	    if !@current_user.nil?
+		json[:name] = user.name
+		if @current_user == user
+		    json[:first_name] = user.first_name
+		    json[:second_name] = user.second_name
+		    json[:email] = user.email
+		end
+	    end
+	end
+	response['Content-type'] = "application/json"
+	json.to_json
+    end
+    
+    delete '/users/:username/?' do |username|
+	response['Content-type'] = "application/json"
+	{:success => false}.to_json
     end
 
     get '/projects/?' do
@@ -109,12 +152,17 @@ class Unifide < Sinatra::Base
 	json.to_json
     end
 
-    get '/projects/:project/units/?' do |project|
-	response.headers["Content-type"] = "json"
-	units = Unit.where(:project_id => Project.where(:name => project).first.id)
-	json ||= {}
-	json[:units] = units.collect {|unit| {:name => unit.value, :type => unit.unit_type.name, :project => unit.project.name}}
-	json[:success] = true
+    get '/units/:project/?' do |project|
+	json ||= {:success => false}
+	
+	project = Project.where(:short_name => project).first
+	units = Unit.where(:project_id => project.id)
+
+	if !units.nil?
+	    json[:units] = units.collect {|unit| {:name => unit.value, :type => unit.unit_type.name, :project => unit.project.name}}
+	    json[:success] = true
+	end
+
 	response['Content-type'] = "application/json"
 	json.to_json
     end
