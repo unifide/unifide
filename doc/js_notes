@@ -194,6 +194,8 @@ or to get just interfaces:
 app.data.get("Package","MyPackage").hasChild.each("Interface");
 returns {"Interface!MyPackage.SomeInterface":{...}}
 
+each() also takes a callback which is run for each unit. The callback has a single argument, which is that unit.
+
 
 Saving:
 

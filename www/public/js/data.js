@@ -140,12 +140,27 @@ init:function(type) {
 add:function(unit) {
     this.data[unit.type+":"+unit.name] = unit;
 },
-each:function(type) {
+// First argument can either be a type or a callback
+// Second argument must be callback
+// Arguments are optional
+each:function(arg, callback) {
+    var type = null;
+    switch(typeof arg) {
+        case "function":
+            callback = arg;
+            break;
+        case "string":
+            type = arg;
+            break;
+    }
     var output = new AssociationSet();
     for(var u in this.data) {
         var unit = this.data[u];
         if(!type || type == unit.type) {
             output.add(unit);
+            if(callback) {
+                callback(unit);
+            }
         }
     }
     return output;
