@@ -88,32 +88,32 @@ showUserControls: function() {
     var email = $("#user-settings").attr("data-user");
     if(email == "") {
 	$("#user-login-box").slideToggle("fast");
-	$("#email-input").val("e-mail");
-	$("#password-input").val("password");
+	$("#login-username").val("username");
+	$("#login-password").val("password");
     }
     else
 	$("#user-settings-box").slideToggle("fast");
 },
 
 login: function() {
-    var email = $("#login-email").val();
+    var username = $("#login-username").val();
     var password = $("#login-password").val();
     $.ajax({
 	url: "/login",
 	type:"POST",
 	context:this,
 	dataType:"json",
-	data:{email:email,password:password},
+	data:{username:username,password:password},
 	success:function(json) {
 	    if(json.success) {
 		$("#user-settings").attr("data-user", json.email);
 		var userMenu = $("#user-settings a");
-		userMenu.html(json.name);
+		userMenu.html(json.username);
 		$("#registration-menu-item").hide();
 		app.updateProjects();
 	    }
 	    else
-		alert("Incorrect E-mail/Password");
+		alert("Incorrect Username/Password");
 	    $("#user-login-box").slideUp("fast");
 	}
     });
@@ -137,6 +137,7 @@ logout: function() {
 register: function() {
     var firstName = $("#reg-fname").val();
     var secondName = $("#reg-sname").val();
+    var username = $("#reg-username").val();
     var email = $("#reg-email").val();
     var password = $("#reg-password").val();
     var confirmPassword = $("#reg-password-confirm").val();
@@ -145,7 +146,7 @@ register: function() {
 	type:"POST",
 	context:this,
 	dataType:"json",
-	data:{first_name:firstName,second_name:secondName,email:email,password:password},
+	data:{first_name:firstName,second_name:secondName,username:username,email:email,password:password},
 	success:function(json) {
 	    if(json.success) {
 		$("#user-settings").attr("data-user", json.email);
@@ -155,18 +156,5 @@ register: function() {
 	    }
 	}
     });
-},
-
-updateProjects: function() {
-    $.ajax({
-	url:"/projects",
-	type:"POST",
-	context:this,
-	dataType:"json",
-	success:function(json) {
-	    this.projects = json;
-	}
-    });
 }
-
 });

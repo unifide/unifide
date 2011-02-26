@@ -30,8 +30,8 @@ def makeUnit(type, name)
     return unit
 end
 
-admin = User.create(:first_name => "Uni", :second_name => "Fide", :email => "admin@unifide.com", :password => "admin", :join_date => DateTime.now)
-defaultProject = Project.create(:name => "Default", :public => true)
+admin = User.create(:username => "unifide", :first_name => "Uni", :second_name => "Fide", :email => "admin@unifide.com", :password => "admin", :join_date => DateTime.now)
+defaultProject = Project.create(:short_name => "default", :name => "Default", :public => true)
 ProjectUser.create(:project => defaultProject, :user => admin, :admin => true)
 
 packageType = makeUnitType("Package")
@@ -63,11 +63,11 @@ prot = makeUnit(keywordType, "protected")
 priv = makeUnit(keywordType, "private")
 
 javapack = makeUnit(packageType, "java")
-javalangpack = makeUnit(packageType, "lang")
+javalangpack = makeUnit(packageType, "java.lang")
 
-obj = makeUnit classType, "Object"
-str = makeUnit classType, "String"
-lst = makeUnit interfaceType, "List"
+obj = makeUnit classType, "java.lang.Object"
+str = makeUnit classType, "java.lang.String"
+lst = makeUnit interfaceType, "java.util.List"
 
 t = makeUnit templateParameter, "T"
 
