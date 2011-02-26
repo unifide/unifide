@@ -26,18 +26,23 @@ class Unifide < Sinatra::Base
 	if session[:user_id].nil? == false
 	    @current_user = user session[:user_id]
 	end
+	if request.path_info != '/login' && request.path_info != '/register' and @current_user.nil? and (request.put? or request.post? or request.delete?)
+	    request.path_info = '/no'
+	end
     end
 
     before '/projects/:project/?*' do |project|
 	@project = Project.where(:name => project).first
-	if @project.nil?
-	    request.path_info = '/projects'
-	else
-	    if !@project.public?
-		# Project is not public and user is not logged in
-		request.path_info = '/welcome' if @current_user.nil?
-		# Project is not public and logged in user is not a member
-		request.path_info = '/projects' if UserProject.where(:user => @current_user, :project => @project).size == 0
+	if !request.put?
+	    if @project.nil?
+		request.path_info = '/projects'
+	    else
+		if !@project.public?
+		    # Project is not public and user is not logged in
+		    request.path_info = '/welcome' if @current_user.nil?
+		    # Project is not public and logged in user is not a member
+		    request.path_info = '/projects' if UserProject.where(:user => @current_user, :project => @project).size == 0
+		end
 	    end
 	end
     end
@@ -46,80 +51,44 @@ class Unifide < Sinatra::Base
         erb :index
     end
 
-    post '/:type/:name/json' do |type,name|
+    get '/:type/:name/json' do |type,name|
         response.headers['Content-type'] = 'application/json'
         JSONReply.reply(type,name)
     end
 
-    get '/units' do
-	@units = Unit.all
-        erb :units
-    end
-
-    get '/unit/:id' do |id|
-	@unit = Unit.find(id)
-	if @unit.nil?
-	    erb :units
-	else
-	    erb :unit
-	end
-    end
-
-    post '/unit' do
-	@unit = Unit.create(params)
-	redirect '/units'
-    end
-
-    post '/association' do
-	association = Association.create(params)
-	redirect "/unit/#{association.from.id}"
-    end
-
-    get '/search' do
-	@units = Unit.where(:value => params[:name])
-	if(@units.size == 0)
-	    @value = params[:name]
-	    erb :_unit_form
-	else
-	    erb :units
-	end
-    end
-
     post '/register' do
-	response ||= {:success => false}
+	json ||= {:success => false}
 	params[:join_date] = DateTime.now
 	@user = User.new(params)
 	if !@user.save.nil?
-	    response[:success] = true
-	    response[:name] = @user.name
 	    session[:user_id] = @user.id
+	    
+	    json[:success] = true
+	    json[:name] = @user.name
+	    json[:email] = @user.email
 	end
-	response.to_json
+	response['Content-type'] = "application/json"
+	json.to_json
     end
-
-    get '/user/:id' do |id|
-	@user = user id
-	if @user.nil?
-	    redirect '/register'
-	else
-	    erb :user
-	end
-    end
-
-
 
     post '/login' do
-	u = User.where(:email => params[:email]).first
+	u = User.where(:username => params[:username]).first
 	json ||= {}
 	json[:success] = false
 	if !u.nil? and u.password == params[:password]
 	    session[:user_id] = u.id
+	    
 	    json[:success] = true
 	    json[:name] = u.name
 	    json[:email] = u.email
+	    json[:username] = u.username
 	end
 	response['Content-type'] = "application/json"
 	json.to_json
+    end
+
+    put '/projects/:project' do |project|
+	
     end
 
     post '/logout' do
@@ -127,28 +96,26 @@ class Unifide < Sinatra::Base
 	{:success => true}.to_json
     end
 
-    post '/projects/?' do
+    get '/projects/?' do
 	@projects = Project.where(:public => true)
 	json ||= {}
 	if !@current_user.nil?
-	    json[:user] = @current_user.user_projects.collect {|pu| {:name => pu.project.name, :public => pu.project.public, :admin => pu.admin}}
+	    json[:user] = @current_user.user_projects.collect {|pu| {:short_name => pu.project.short_name, :name => pu.project.name, :public => pu.project.public, :admin => pu.admin}}
 	    @projects = @projects - @current_user.user_projects.collect {|pu| pu.project}
 	end
-	json[:public] = @projects.collect {|p| {:name => p.name, :public => p.public}}
+	json[:public] = @projects.collect {|p| {:short_name => p.short_name, :name => p.name, :public => p.public}}
 	json[:success] = true
+	response['Content-type'] = "application/json"
 	json.to_json
     end
 
-    get '/projects/:project/?' do
-	erb :project
-    end
-
-    post '/projects/:project/units/?' do |project|
+    get '/projects/:project/units/?' do |project|
 	response.headers["Content-type"] = "json"
 	units = Unit.where(:project_id => Project.where(:name => project).first.id)
 	json ||= {}
 	json[:units] = units.collect {|unit| {:name => unit.value, :type => unit.unit_type.name, :project => unit.project.name}}
 	json[:success] = true
+	response['Content-type'] = "application/json"
 	json.to_json
     end
 

@@ -6,7 +6,7 @@ init: function(elem) {
     this.resize(); // first resize makes sure everything is the right size
     this.root = app.processor.process("Package","MyPackage",app.loader,
         function(context) {this.root = context;});
-    this.root = new UnifideContext(this, this, "MyPackage");
+    //this.root = new PackageContext(this, this, "MyPackage");
 },
 
 destroy: function() {

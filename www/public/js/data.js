@@ -8,7 +8,7 @@ fetch:function(type,name,callback,depth,force) {
     // Fetch the required unit
     $.ajax({
         url:"/"+type+"/"+name+"/json",
-        type:"POST",
+        type:"GET",
         context:this,
         dataType:"json",
         data:{depth:depth},
