@@ -7,7 +7,7 @@ init: function() {
     // if statement is due to a bug in Chrome 9
     $("#user-login-box").mouseleave(function() { if(event.target==this)$("#user-login-box").slideUp("fast"); });
     $("#user-settings-box").mouseleave(function() { $("#user-settings-box").slideUp("fast"); });
-    $("#theme-toggle").click(this.toggleTheme);
+    $("#theme-toggle").click(app.toggleTheme);
     $("#login").click(this.login);
     $("#logout").click(this.logout);
 
