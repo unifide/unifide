@@ -1,14 +1,13 @@
 var Editor = Class.extend({
-init: function(elem,index) {
+init: function(elem) {
     this.parent = elem;
-    this.index = index;
     this.elem = $("<div/>").appendTo(this.parent).addClass("contextDiv");
     this.tabs = $("<div/>").appendTo(this.elem);
     this.current = {};
 
     var tab = this.newTab();
     tab.title.text("Start Page");
-    tab.content.append("<h1>START PAGE!!</h1>");
+    tab.content.html("<h1>START PAGE!!</h1>");
     
     app.processor.process("Package","java.lang",this.newTab());
 
@@ -44,10 +43,10 @@ resize: function() {
 },
 
 newTab:function() {
-    var title = $("<button>&nbsp;</button>")
+    var title = $("<button>Loading...</button>")
         .button()
         .appendTo(this.tabs);
-    var content = $('<div style="display:none"/>').appendTo(this.elem);
+    var content = $('<div>Loading...</div>').appendTo(this.elem);
 
     var opts = {
         id:this.nextId++,
@@ -57,7 +56,7 @@ newTab:function() {
     };
     title.click($.proxy(this.selectTab,opts));
 
-    $.proxy(this.selectTab,opts);
+    $.proxy(this.selectTab,opts)();
 
     return opts;
 },
