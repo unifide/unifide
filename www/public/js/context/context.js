@@ -1,6 +1,7 @@
 var Context = Class.extend({
 init:function(options) {
     this.options = options;
+    this.options.content.html("");
 },
 
 name:function(val) {
