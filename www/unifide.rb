@@ -20,9 +20,6 @@ class Unifide < Sinatra::Base
 	def get_project(shortname)
 	    Project.where(:short_name => shortname).first
 	end
-	def link_to_unit(unit, text)
-	    "<a href=\"/projects/#{unit.project.name}/units/#{unit.unit_type.name}/#{unit.value}\">#{text}</a>"
-	end
 	def user_can_see_project?(user, project)
 	    (project.public? or (!user.nil? and project.project_users.select {|pu| pu.user_id == user.id}.empty?))
 	end
@@ -158,7 +155,7 @@ class Unifide < Sinatra::Base
 	json ||= {:success => false}
 	project = get_project project_name
 	if user_can_see_project? current_user, project
-	    json[:units] = project.units.collect {|unit| {:name => unit.value, :type => unit.unit_type.name, :project => unit.project.name}}
+	    json[:units] = project.units.collect {|unit| unit.to_json}
 	    json[:success] = true
 	end
 	response['Content-type'] = "application/json"
@@ -172,7 +169,7 @@ class Unifide < Sinatra::Base
 	    type = UnitType.where(:name => typename).first
 	    if !type.nil?
 		json[:success] = true
-		json[:units] = type.units.collect {|unit| {:name => unit.value}}
+		json[:units] = type.units.collect {|unit| unit.to_json}
 	    end
 	end
 	response['Content-type'] = "application/json"
@@ -185,8 +182,15 @@ class Unifide < Sinatra::Base
 	if user_can_see_project? current_user, project
 	    unit = get_unit project, typename, name
 	    if !unit.nil?
+		params[:depth] ||= 1
+		depth = params[:depth].to_i
 		json[:success] = true
-		json[:unit] = {:name => unit.value, :type => unit.unit_type.name, :project => unit.project.name}
+		json[:depth] = depth
+		json[:unit] = unit.to_json
+		neighbours = unit.get_neighbours(depth)
+		assocs = Association.get_relationships(neighbours)
+		json[:neighbours] = neighbours.collect {|u| u.to_json}
+		json[:associations] = assocs.collect {|a| {:from => neighbours.index(a.from), :to => neighbours.index(a.to), :type => a.association_type.name}}
 	    end
 	end
 	response['Content-type'] = "application/json"
