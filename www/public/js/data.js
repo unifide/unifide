@@ -23,7 +23,7 @@ fetch:function(type,name,callback,depth,force) {
             if(!json.success) {
                 console.error("Error fetching JSON: "+json.error);
             } else {
-                callback(this._processJSON(json));
+                callback(this._processJSON(json,'default',type,name));
             }
         }
     });
@@ -62,31 +62,50 @@ remove:function(type,name) {
     delete this[id];
     // handle autosave
 },
-_processJSON:function(json) {
-    var map = []; // maps json index to final object
+_processJSON:function(json,project,type,name) {
+    var map = {}; // maps json index to final object
 
     // write units to memory
-    for(var i=0;i<json.neighbours.length;i++) {
-        var j = json.neighbours[i];
-        var id = j.project+":"+j.type+":"+j.name; // Project!Type!Name
-
-        if(!this[id]) { // prepare object if it doesn't exist
-            this[id] = new Unit(j.type,j.name);
-        }
-        map.push(this[id]);
+    for(var p in json.units) {
+	var types = json.units[p];
+	for(var t in types) {
+	    var units = types[t];
+	    for(var u in units) {
+		var unit = units[u];
+		var i = unit[0];
+		var nom = unit[1];
+		var id = p+":"+t+":"+nom; // project:type:name
+		if(!this[id]) { // prepare object if it doesn't exist
+		    this[id] = new Unit(p,t,nom);
+		}
+		map[i] = this[id];
+	    }
+	}
     }
 
     // apply associations
-    for(var i=0;i<json.associations.length;i++) {
-        var j = json.associations[i];
-	var f = json.neighbours[j.from];
-	var t = json.neighbours[j.to];
-        var u = this[f.project+":"+f.type+":"+f.name];
-	u.addAssociation(j.type,this[t.project+":"+t.type+":"+t.name]);
+    for(var p in json.units) {
+	var types = json.units[p];
+	for(var t in types) {
+	    var units = types[t];
+	    for(var j=0;j<units.length;j++) {
+		var unit = units[j];
+		var i = unit[0];
+		var nom = unit[1];
+		var id = p+":"+t+":"+nom; // project:type:name
+		realUnit = this[id];
+		for(var at in unit[2]) {
+		    var as = unit[2][at]; // list of association targets
+		    for(var k=0;k<as.length;k++) {
+			realUnit.addAssociation(at,map[as[k]]);
+		    }
+		}
+	    }
+	}
     }
 
     // update depths
-    var root = this[json.unit.project+":"+json.unit.type+":"+json.unit.name];
+    var root = this[project+":"+type+":"+name];
     this._updateDepth(root,json.depth);
 
     return root; // return the requested unit
@@ -105,9 +124,10 @@ _updateDepth:function(unit, depth) {
 });
 
 var Unit = Class.extend({
-init:function(type,name) {
+init:function(project,type,name) {
     this.type = type;
     this.name = name;
+    this.project = project;
 },
 addAssociation:function(assoc_type,target) {
     var hasType = "has"+assoc_type;

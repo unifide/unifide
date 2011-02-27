@@ -186,11 +186,23 @@ class Unifide < Sinatra::Base
 		depth = params[:depth].to_i
 		json[:success] = true
 		json[:depth] = depth
-		json[:unit] = unit.to_json
-		neighbours = unit.get_neighbours(depth)
-		assocs = Association.get_relationships(neighbours)
-		json[:neighbours] = neighbours.collect {|u| u.to_json}
-		json[:associations] = assocs.collect {|a| {:from => neighbours.index(a.from), :to => neighbours.index(a.to), :type => a.association_type.name}}
+		units = unit.get_neighbours(depth)
+		projects = Project.where(:id => units.collect{|u| u.project_id}).collect {|p| p.short_name}
+		json[:units] = {}
+		assocs = Association.get_relationships(units)
+		projects.each do |p|
+		    json[:units][p] = {}
+		    UnitType.where(:id => units.collect {|u| u.unit_type_id}).each do |ut|
+			json[:units][p][ut.name] = []
+			units.select {|u| u.project.short_name == p and u.unit_type_id == ut.id}.each do |u|
+			    as = {}
+			    AssociationType.where(:id => assocs.select {|a| a.from_id == u.id }.collect {|a| a.association_type_id}).each do |at|
+				as[at.name] = u.from_associations.select {|a| a.association_type_id == at.id and units.include? a.to}.collect{|a| units.index(a.to)}
+			    end
+			    json[:units][p][ut.name] << [units.index(u), u.value, as]
+			end
+		    end
+		end
 	    end
 	end
 	response['Content-type'] = "application/json"
