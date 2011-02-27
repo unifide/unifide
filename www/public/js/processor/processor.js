@@ -20,7 +20,7 @@ createPackageContext:function(options, unit) {
 
     package.name(unit.name);
 
-    unit.hasChild.each(function(child) {
+    unit.isOwnerOf.each(function(child) {
         package.addChild(child);
     });
 

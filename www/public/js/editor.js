@@ -10,7 +10,7 @@ init: function(elem,index) {
     tab.title.text("Start Page");
     tab.content.append("<h1>START PAGE!!</h1>");
     
-    app.processor.process("Package","MyPackage",this.newTab());
+    app.processor.process("Package","java.lang",this.newTab());
 
     this.resize();
 },
