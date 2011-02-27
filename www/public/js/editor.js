@@ -4,9 +4,9 @@ init: function(elem) {
     this.elem = $("<div/>").appendTo(elem).addClass("contextDiv");
 
     this.resize(); // first resize makes sure everything is the right size
-    this.root = app.processor.process("Package","MyPackage",this.elem,
+    this.root = app.processor.process("Package","java.lang",this.elem,
         app.loader,function(context) {this.root = context;});
-    this.root = new UnifideContext(this, this, "MyPackage");
+    this.root = new UnifideContext(this, this, "java.lang");
 },
 
 destroy: function() {

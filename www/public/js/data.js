@@ -2,12 +2,12 @@ var DataRepository = Class.extend({
 init:function() {},
 fetch:function(type,name,callback,depth,force) {
     // return if we have it already, unless forcing
-    if(this[type+":"+name] && !force) return this[type+":"+name];
+    if(this["default:"+type+":"+name] && !force) return this["default:"+type+":"+name];
     // depth is association recursion depth
-    if(!depth) depth = 0;
+    if(!depth) depth = 1;
     // Fetch the required unit
     $.ajax({
-        url:"/"+type+"/"+name+"/json",
+        url:"units/default/"+type+"/"+name,
         type:"GET",
         context:this,
         dataType:"json",
@@ -20,7 +20,7 @@ fetch:function(type,name,callback,depth,force) {
             }
         },
         success:function(json) {
-            if(json.error) {
+            if(!json.success) {
                 console.error("Error fetching JSON: "+json.error);
             } else {
                 callback(this._processJSON(json));
@@ -33,7 +33,7 @@ get:function(type,name) {
 },
 remove:function(type,name) {
     // removes the unit and any associations it's linked to
-    var id = type+":"+name;
+    var id = "default:"+type+":"+name;
     var u = this[id];
     if(!u) return;
 
@@ -66,33 +66,27 @@ _processJSON:function(json) {
     var map = []; // maps json index to final object
 
     // write units to memory
-    for(var i=0;i<json.data.length;i++) {
-        var j = json.data[i];
-        var id = j[0]+":"+j[1]; // Type!Name
+    for(var i=0;i<json.neighbours.length;i++) {
+        var j = json.neighbours[i];
+        var id = j.project+":"+j.type+":"+j.name; // Project!Type!Name
 
         if(!this[id]) { // prepare object if it doesn't exist
-            this[id] = new Unit(j[0],j[1]);
+            this[id] = new Unit(j.type,j.name);
         }
         map.push(this[id]);
     }
 
     // apply associations
-    for(var i=0;i<json.data.length;i++) {
-        var j = json.data[i];
-        var id = j[0]+":"+j[1];
-        var u = this[id];
-        
-        for(var a in j[2]) { // a = association name
-            var acc = j[2][a]; // acc = association target array
-            for(var t=0;t<acc.length;t++) {
-                var at = map[acc[t]]; // association target
-                u.addAssociation(a,at);
-            }
-        }
+    for(var i=0;i<json.associations.length;i++) {
+        var j = json.associations[i];
+	var f = json.neighbours[j.from];
+	var t = json.neighbours[j.to];
+        var u = this[f.project+":"+f.type+":"+f.name];
+	u.addAssociation(j.type,this[t.project+":"+t.type+":"+t.name]);
     }
 
     // update depths
-    var root = this[json.type+":"+json.name];
+    var root = this[json.unit.project+":"+json.unit.type+":"+json.unit.name];
     this._updateDepth(root,json.depth);
 
     return root; // return the requested unit
