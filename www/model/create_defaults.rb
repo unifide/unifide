@@ -73,6 +73,9 @@ t = makeUnit templateParameter, "T"
 
 tostr = makeUnit methodType, "toString"
 
+TextUnit.create :text_unit_type => code, :text => "return something;", :unit => tostr
+TextUnit.create :text_unit_type => docs, :text => "Returns a String.", :unit => tostr
+
 makeAssoc obj, haskeyword, pub
 makeAssoc str, haskeyword, pub
 makeAssoc lst, haskeyword, pub
