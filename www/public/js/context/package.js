@@ -1,20 +1,17 @@
 var PackageContext = Context.extend({
-init:function(container) {
-    this._super(container);
+init:function(options) {
+    this._super(options);
 
-    this.elem = $('<div style="margin:5px"/>').appendTo(container);
-    this.titleBar = $('<h2/>').appendTo(this.elem);
+//    this.elem = $('<div style="margin:5px"/>');
+    this.titleBar = $('<h2/>').appendTo(this.options.content);
     this.children = $('<div>'+
         'Packages:<br/><ul class="pkg_packages"/>'+
         'Classes:<br/><ul class="pkg_classes"/>'+
         'Interfaces:<br/><ul class="pkg_interfaces"/>'+
-        '</div>').appendTo(this.elem);
+        '</div>').appendTo(this.options.content);
 },
 
 destroy:function() {
-    this.class.destroy();
-
-    this.elem.remove();
 },
 
 resize:function() {
@@ -23,15 +20,6 @@ resize:function() {
     this.class.width = 200;
     this.class.height = 100;
     this.class.resize();
-},
-
-name:function(val) {
-    if(val) {
-        this._name = val;
-        this.titleBar.text(this._name);
-    } else {
-        return this._name;
-    }
 },
 
 addChild:function(child) {

@@ -15,7 +15,6 @@ init: function() {
 },
 
 run: function() {
-    this.loader = new Loader();
     this.window = new Window();
     this.project = new Project();
     this.actions = new ActionStack();
@@ -23,13 +22,11 @@ run: function() {
     this.processor = new CodeProcessor();
 
     this.editors = [];
-    this.editors.push(new Editor($("#editor")));
+    this.editors.push(new Editor($("#editor"),0));
 
-    this.loader.onLoad($.proxy(function() {
-        this.resize();
+    this.resize();
 
-        $(window).resize($.proxy(app.resize,this));
-    },this));
+    $(window).resize($.proxy(app.resize,this));
 },
 
 toggleTheme: function() {

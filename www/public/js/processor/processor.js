@@ -1,36 +1,22 @@
 var CodeProcessor = Class.extend({
 init:function() {},
-process:function(type, name, container, loader, callback) {
-    var obj = {
-        loader:loader,
-        callback:callback,
-        processor:this,
-        container:container
-    };
-    loader.start(obj, type+", "+name);
+process:function(type, name, options) {
+    options.processor = this;
     
     // get the required data
     app.data.fetch(type,name,$.proxy(function(unit) {
-        var context = null;
-
-        // make and return the appropriate context
         switch(unit.type) {
             case "Package":
-                context = this.processor.createPackageContext(container, unit);
+                this.processor.createPackageContext(this, unit);
                 break;
             case "Class":
-                context = this.processor.createClassContext(container, unit);
+                this.processor.createClassContext(this, unit);
                 break;
         }
-
-        if(this.callback) {
-            this.callback(context);
-        }
-        this.loader.end(obj);
-    },obj));
+    },options));
 },
-createPackageContext:function(container, unit) {
-    var package = new PackageContext(container);
+createPackageContext:function(options, unit) {
+    var package = new PackageContext(options);
 
     package.name(unit.name);
 
@@ -40,7 +26,7 @@ createPackageContext:function(container, unit) {
 
     return package;
 },
-createClassContext:function(container, unit) {
-    return new ClassContext(container);
+createClassContext:function(options, unit) {
+    return new ClassContext(options);
 }
 });

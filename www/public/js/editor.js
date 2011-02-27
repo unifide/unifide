@@ -1,12 +1,18 @@
 var Editor = Class.extend({
-init: function(elem) {
+init: function(elem,index) {
     this.parent = elem;
-    this.elem = $("<div/>").appendTo(elem).addClass("contextDiv");
+    this.index = index;
+    this.elem = $("<div/>").appendTo(this.parent).addClass("contextDiv");
+    this.tabs = $("<div/>").appendTo(this.elem);
+    this.current = {};
 
-    this.resize(); // first resize makes sure everything is the right size
-    this.root = app.processor.process("Package","MyPackage",this.elem,
-        app.loader,function(context) {this.root = context;});
-    this.root = new UnifideContext(this, this, "MyPackage");
+    var tab = this.newTab();
+    tab.title.text("Start Page");
+    tab.content.append("<h1>START PAGE!!</h1>");
+    
+    app.processor.process("Package","MyPackage",this.newTab());
+
+    this.resize();
 },
 
 destroy: function() {
@@ -36,4 +42,36 @@ resize: function() {
         this.root.resize();
     }
 },
+
+newTab:function() {
+    var title = $("<button>&nbsp;</button>")
+        .button()
+        .appendTo(this.tabs);
+    var content = $('<div style="display:none"/>').appendTo(this.elem);
+
+    var opts = {
+        id:this.nextId++,
+        editor:this,
+        content:content,
+        title:$("span", title)
+    };
+    title.click($.proxy(this.selectTab,opts));
+
+    $.proxy(this.selectTab,opts);
+
+    return opts;
+},
+
+selectTab:function() {
+    if($.isEmptyObject(this.editor.current)) {
+        this.editor.current.elem = this.content;
+        this.editor.current.id = this.id;
+        this.editor.current.elem.show();
+    } else if(this.editor.current.id != this.id) {
+        this.editor.current.elem.hide();
+        this.editor.current.elem = this.content;
+        this.editor.current.id = this.id;
+        this.editor.current.elem.show();
+    }
+}
 });
