@@ -2,7 +2,7 @@ $LOAD_PATH << './model'
 require 'rubygems'
 require 'sinatra'
 require 'model'
-require 'json'
+require 'json_reply'
 
 class Unifide < Sinatra::Base
 
@@ -18,13 +18,20 @@ class Unifide < Sinatra::Base
 	    end
 	end
 	def get_project(shortname)
-	    Project.where(:short_name => shortname).first
+	    Project.find_by_short_name(shortname)
 	end
 	def user_can_see_project?(user, project)
 	    (project.public? or (!user.nil? and project.project_users.select {|pu| pu.user_id == user.id}.empty?))
 	end
+	def get_visible_projects(user)
+	    if user.nil?
+		return Project.where(:public => true)
+	    else
+		return user.projects & Project.where(:public => true)
+	    end
+	end
 	def get_unit(project, type, name)
-	    Unit.where(:project_id => project.id, :unit_type_id => UnitType.where(:name => type).first, :value => name).first
+	    Unit.where(:project_id => project.id, :unit_type_id => UnitType.find_by_name(type), :value => name).first
 	end
     end
 
@@ -34,13 +41,12 @@ class Unifide < Sinatra::Base
 	end
     end
 
-    get '/' do
-        erb :index
+    after %r{/(users|projects|units|associations).*} do
+	response['Content-type'] = "application/json"
     end
 
-    get '/:type/:name/json' do |type,name|
-        response.headers['Content-type'] = 'application/json'
-        JSONReply.reply(type,name)
+    get '/' do
+        erb :index
     end
 
     get '/currentuser/?' do
@@ -56,7 +62,7 @@ class Unifide < Sinatra::Base
     end
 
     put '/currentuser/?' do
-	u = User.where(:username => params[:username]).first
+	u = User.find_by_username(params[:username])
 	json ||= {}
 	json[:success] = false
 	if !u.nil? and u.password == params[:password]
@@ -166,7 +172,7 @@ class Unifide < Sinatra::Base
 	json ||= {:success => false}
 	project = get_project project_name
 	if user_can_see_project? current_user, project
-	    type = UnitType.where(:name => typename).first
+	    type = UnitType.find_by_name(typename)
 	    if !type.nil?
 		json[:success] = true
 		json[:units] = type.units.collect {|unit| unit.to_json}
@@ -177,20 +183,21 @@ class Unifide < Sinatra::Base
     end
 
     get '/units/:project/:typename/:name/?' do |project_name, typename, name|
-	json ||= {:success => false}
-	project = get_project project_name
-	if user_can_see_project? current_user, project
-	    unit = get_unit project, typename, name
-	    if !unit.nil?
-		params[:depth] ||= 1
-		depth = params[:depth].to_i
-		json[:success] = true
-		json[:depth] = depth
-		json[:units] = JSONReply.unit_reply unit.get_neighbours(depth).select{|u| user_can_see_project? current_user, u.project}
-	    end
+	JSONReply.unit current_user, project_name, typename, name
+    end
+
+    get '/associations/?' do
+	json = {:success => true}
+	json[:associations] = {}
+	units = get_visible_projects(current_user).collect {|p| p.units.select {|u| !u.from_associations.empty?}}
+	units.flatten! 1
+	assocs = Association.where(:from_id => units.collect{|u| u.id})
+	assocs.each do |a|
+	    json[:associations][a.association_type.name] ||= []
+	    json[:associations][a.association_type.name] << [a.from.value,a.to.value]
 	end
 	response['Content-type'] = "application/json"
-	json.to_json
+	response.to_json
     end
 
     not_found do
