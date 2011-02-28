@@ -41,7 +41,7 @@ class Unifide < Sinatra::Base
 	end
     end
 
-    after %r{/(users|projects|units|associations).*} do
+    after %r{/(currentuser|users|projects|units|associations).*} do
 	response['Content-type'] = "application/json"
     end
 
@@ -57,7 +57,6 @@ class Unifide < Sinatra::Base
 	    json[:guest] = false
 	    json[:username] = current_user.username
 	end
-	response['Content-type'] = "application/json"
 	json.to_json
     end
 
@@ -73,20 +72,17 @@ class Unifide < Sinatra::Base
 	    json[:email] = u.email
 	    json[:username] = u.username
 	end
-	response['Content-type'] = "application/json"
 	json.to_json
     end
 
     delete '/currentuser/?' do
 	session[:user_id] = nil
-	response['Content-type'] = "application/json"
 	{:success => true}.to_json
     end
 
     get '/users/?' do
 	json ||= {}
 	json[:users] = User.all.collect {|user| {:username => user.username}}
-	response['Content-type'] = "application/json"
 	json.to_json
     end
 
@@ -99,12 +95,10 @@ class Unifide < Sinatra::Base
 	    session[:user_id] = user.id
 	    json[:success] = true
 	end
-	response['Content-type'] = "application/json"
 	json.to_json
     end
 
     post '/users/:username/?' do |username|
-	response['Content-type'] = "application/json"
 	{:success => false}.to_json
     end
 
@@ -124,12 +118,10 @@ class Unifide < Sinatra::Base
 	    end
 	    json[:user] = userjson
 	end
-	response['Content-type'] = "application/json"
 	json.to_json
     end
     
     delete '/users/:username/?' do |username|
-	response['Content-type'] = "application/json"
 	{:success => false}.to_json
     end
 
@@ -142,7 +134,6 @@ class Unifide < Sinatra::Base
 	end
 	json[:public] = projects.collect {|p| {:short_name => p.short_name, :name => p.name, :public => p.public}}
 	json[:success] = true
-	response['Content-type'] = "application/json"
 	json.to_json
     end
 
@@ -153,37 +144,23 @@ class Unifide < Sinatra::Base
 	    json[:success] = true
 	    json[:project] = {:short_name => project.short_name, :name => project.name, :public => project.public, :users => project.project_users.collect {|pu| {:username => pu.user.username, :admin => pu.admin }}}
 	end
-	response['Content-type'] = "application/json"
 	json.to_json
+    end
+
+    get '/units/?' do
+	JSONReply.get_units current_user
     end
 
     get '/units/:project/?' do |project_name|
-	json ||= {:success => false}
-	project = get_project project_name
-	if user_can_see_project? current_user, project
-	    json[:units] = project.units.collect {|unit| unit.to_json}
-	    json[:success] = true
-	end
-	response['Content-type'] = "application/json"
-	json.to_json
+	JSONReply.get_project_units current_user, project_name
     end
 
     get '/units/:project/:typename/?' do |project_name, typename|
-	json ||= {:success => false}
-	project = get_project project_name
-	if user_can_see_project? current_user, project
-	    type = UnitType.find_by_name(typename)
-	    if !type.nil?
-		json[:success] = true
-		json[:units] = type.units.collect {|unit| unit.to_json}
-	    end
-	end
-	response['Content-type'] = "application/json"
-	json.to_json
+	JSONReply.get_units_of_type current_user, project_name, typename
     end
 
     get '/units/:project/:typename/:name/?' do |project_name, typename, name|
-	JSONReply.unit current_user, project_name, typename, name
+	JSONReply.get_unit current_user, project_name, typename, name, params[:depth].to_i
     end
 
     get '/associations/?' do
@@ -196,7 +173,6 @@ class Unifide < Sinatra::Base
 	    json[:associations][a.association_type.name] ||= []
 	    json[:associations][a.association_type.name] << [a.from.value,a.to.value]
 	end
-	response['Content-type'] = "application/json"
 	response.to_json
     end
 
