@@ -163,6 +163,10 @@ class Unifide < Sinatra::Base
 	JSONReply.get_unit current_user, project_name, typename, name, params[:depth].to_i
     end
 
+    put '/units/:project/:typename/:name/?' do |project_name, typename, name|
+	JSONReply.create_unit current_user, project_name, typename, name
+    end
+
     get '/associations/?' do
 	json = {:success => true}
 	json[:associations] = {}
